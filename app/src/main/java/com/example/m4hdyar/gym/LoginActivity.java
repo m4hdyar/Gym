@@ -10,15 +10,21 @@ import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText UserTxt = (EditText) findViewById(R.id.editTextUserName);
-    EditText PassTxt = (EditText) findViewById(R.id.editTextPass);
-    Button LoginBt = (Button) findViewById(R.id.buttonLogin);
+    EditText UserTxt ;
+    EditText PassTxt ;
+    Button LoginBt ;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        UserTxt = (EditText) findViewById(R.id.editTextUserName);
+        PassTxt = (EditText) findViewById(R.id.editTextPass);
+        LoginBt = (Button) findViewById(R.id.buttonLogin);
+
+
         LoginBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
