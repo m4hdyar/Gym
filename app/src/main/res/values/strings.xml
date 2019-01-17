@@ -23,4 +23,8 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <!-- String Page name -->
+    <string name="login_page">صفحه ورود</string>
+    
+    
 </resources>
