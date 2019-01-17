@@ -5,32 +5,39 @@
     android:orientation="horizontal"
     android:textDirection="rtl"
     android:layoutDirection="rtl"
+    android:gravity="center"
+    android:weightSum="3"
     >
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
+        android:id="@+id/mealTime"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:gravity="center"
+        android:text="mealTime"
+        />
 
     <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
+        android:id="@+id/mealName"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:gravity="center"
+        android:text="meal"
+        />
 
     <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
+        android:id="@+id/mealAmount"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:gravity="center"
+        android:text="amount" />
 </LinearLayout>

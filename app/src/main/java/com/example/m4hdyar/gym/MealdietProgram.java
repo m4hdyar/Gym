@@ -10,16 +10,36 @@ public class MealdietProgram {
     private Date submitDate;
 
     ArrayList<MealdietProgramDay> programDays;
-
-    public class MealdietProgramDay {
+    //TODO:REMOVE STATICS
+    public static class MealdietProgramDay {
         private int dayNumber;
         //Each row of Meal Diet Program
-        public class MealdietProgramRow {
+        public static class MealdietProgramRow {
             private String foodName;
-            private String foodAmount, mealTime;
+            private String mealAmount, mealTime;
             private class PrescribedFood {
             }
+
+            public MealdietProgramRow(String foodName, String mealAmount, String mealTime) {
+                this.foodName = foodName;
+                this.mealAmount = mealAmount;
+                this.mealTime = mealTime;
+            }
+
+            public String getFoodName() {
+                return foodName;
+            }
+
+            public String getMealAmount() {
+                return mealAmount;
+            }
+
+            public String getMealTime() {
+                return mealTime;
+            }
+
         }
+
     }
 
 }
