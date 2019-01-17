@@ -1,5 +1,4 @@
-<resources
-    tools:ignore="ExtraTranslation" xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ExtraTranslation">
     <string name="app_name">Gym</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -25,6 +24,7 @@
     </string>
     <!-- String Page name -->
     <string name="login_page">صفحه ورود</string>
-    
-    
+    <string name="title_activity_body_state">BodyStateActivity</string>
+
+
 </resources>
