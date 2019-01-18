@@ -31,7 +31,9 @@
         <activity
             android:name=".BodyStateActivity"
             android:label="@string/title_activity_body_state"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 
 </manifest>

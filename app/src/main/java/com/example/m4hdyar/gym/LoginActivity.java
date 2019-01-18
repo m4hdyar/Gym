@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void login() {
-        if (UserTxt.getText().toString().equals("admin") && PassTxt.getText().toString().equals("admin")) {
+        if (UserTxt.getText().toString().equals("a") && PassTxt.getText().toString().equals("a")) {
 
             Toast.makeText(getApplicationContext(),
                     "ورود موفقیت آمیز",Toast.LENGTH_SHORT).show();

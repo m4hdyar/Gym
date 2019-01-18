@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_private_sport_game) {
 
         } else if (id == R.id.nav_body_state) {
+            Intent i = new Intent(this, BodyStateActivity.class);
+            startActivity(i);
 
         } else if (id == R.id.nav_account) {
 
