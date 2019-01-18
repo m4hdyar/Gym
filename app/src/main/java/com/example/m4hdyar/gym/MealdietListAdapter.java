@@ -37,7 +37,9 @@ public class MealdietListAdapter extends RecyclerView.Adapter<MealdietListAdapte
     public MealDietListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Inflating layout from context
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.mealdiet_list_item_layout, null);
+
+        //TODO:maybe changing null to parent?! https://stackoverflow.com/questions/30691150/match-parent-width-does-not-work-in-recyclerview
+        View view = inflater.inflate(R.layout.mealdiet_list_item_layout, parent,false);
         //Finally creating view holder
 
         /**

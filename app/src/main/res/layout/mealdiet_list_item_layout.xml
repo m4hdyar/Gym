@@ -1,43 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:textDirection="rtl"
     android:layoutDirection="rtl"
-    android:gravity="center"
-    android:weightSum="3"
     >
-
-    <TextView
-        android:id="@+id/mealTime"
-        android:layout_width="0dp"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
+        android:orientation="horizontal"
+        android:textDirection="rtl"
+        android:layoutDirection="rtl"
         android:gravity="center"
-        android:text="mealTime"
-        />
+        android:weightSum="3"
+        android:id="@+id/innerListLinearLayouttt"
+        >
+        <TextView
+            android:id="@+id/mealTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="mealTime"
+            />
 
-    <TextView
-        android:id="@+id/mealName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="meal"
-        />
+        <TextView
+            android:id="@+id/mealName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="meal"
+            />
 
-    <TextView
-        android:id="@+id/mealAmount"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="amount" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/mealAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="amount" />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
