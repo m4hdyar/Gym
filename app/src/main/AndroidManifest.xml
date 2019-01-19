@@ -28,11 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".BodyStateActivity"
-            android:label="@string/title_activity_body_state"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ProfileActivity"></activity>
     </application>
 

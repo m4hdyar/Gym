@@ -1,6 +1,7 @@
 package com.example.m4hdyar.gym;
 
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -35,10 +36,12 @@ public class LoginActivity extends AppCompatActivity {
 
 
     public void login() {
+//        Fragment fragment = null;
         if (UserTxt.getText().toString().equals("a") && PassTxt.getText().toString().equals("a")) {
 
             Toast.makeText(getApplicationContext(),
                     "ورود موفقیت آمیز",Toast.LENGTH_SHORT).show();
+//            fragment = new SportProgramFragment();
             Intent i = new Intent(this, MainActivity.class);
             startActivity(i);
         } else {
