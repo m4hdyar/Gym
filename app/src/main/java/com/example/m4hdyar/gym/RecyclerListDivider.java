@@ -9,6 +9,8 @@ import android.view.View;
 
 import com.example.m4hdyar.gym.R;
 
+
+//TODO: It is extra as recycler view not have divider itself.
 public class RecyclerListDivider extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.m4hdyar.gym.MealdietProgram.MealdietProgramDay.MealdietProgramRow;
 
@@ -20,12 +22,12 @@ public class MealdietProgramActivity extends AppCompatActivity {
 
     //Defining Program RecyclerView and Adapter
     RecyclerView programRecyclerView;
-    MealdietListAdapter programListAdapter;
+    MealdietListAdapter programListAdapter,programListAdapter2;
 
-    List<MealdietProgramRow> programRowsList;
+    List<MealdietProgramRow> programRowsList,programRowsList2;
 
     //TODO:It is a test you can have array of programs too
-    MealdietProgram programTest;
+    MealdietProgram programTest,programTest2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,10 +69,67 @@ public class MealdietProgramActivity extends AppCompatActivity {
                         "Ziyad",
                         "dir")
         );
-
         //Choose program list adapter value and assign adapter to recycle view
         programListAdapter = new MealdietListAdapter(this,programRowsList);
         programRecyclerView.setAdapter(programListAdapter);
+
+
+
+
+
+
+        programTest2 = new MealdietProgram(new Date());
+        MealdietProgram.MealdietProgramDay programDayTest2 = programTest2.addOneDay(1);
+
+        programRowsList2 = new ArrayList<>();
+        programRowsList2.add(
+                programDayTest2.addOneRow(
+                        "pizza",
+                        "200g",
+                        "asr")
+        );
+        programRowsList2.add(
+                programDayTest2.addOneRow(
+                        "sandwich",
+                        "550g",
+                        "sob")
+        );
+        programRowsList2.add(
+                programDayTest2.addOneRow(
+                        "pofak",
+                        "Ziyad",
+                        "harmoghe")
+        );
+        programRowsList2.add(
+                programDayTest2.addOneRow(
+                        "burger",
+                        "1kg",
+                        "shab")
+        );
+        programRowsList2.add(
+                programDayTest2.addOneRow(
+                        "HI",
+                        "HUU",
+                        "HRWG")
+        );
+
+        //Choose program list adapter value and assign adapter to recycle view
+        programListAdapter2 = new MealdietListAdapter(this,programRowsList2);
+        programRecyclerView.setAdapter(programListAdapter);
+
+
+        Button testbutton = (Button) findViewById(R.id.changeList);
+        testbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                programRecyclerView.swapAdapter(programListAdapter2, false);
+            }
+        });
+
+
+
+
+        //CREATING DIVIDERS
         //programRecyclerView.addItemDecoration(new RecyclerListDivider(this));
         DividerItemDecoration verticalDecoration = new DividerItemDecoration(programRecyclerView.getContext(),DividerItemDecoration.VERTICAL);
         Drawable verticalDivider = ContextCompat.getDrawable(this,R.drawable.line_divider);
@@ -78,6 +137,7 @@ public class MealdietProgramActivity extends AppCompatActivity {
         programRecyclerView.addItemDecoration(verticalDecoration);
 
 
+        //TODO : It does not do what it should.
         DividerItemDecoration horizontalDecoration = new DividerItemDecoration(programRecyclerView.getContext(),DividerItemDecoration.HORIZONTAL);
         Drawable horizontalDivider = ContextCompat.getDrawable(this,R.drawable.line_divider);
         horizontalDecoration.setDrawable(horizontalDivider);

@@ -25,6 +25,7 @@
     <!-- String Page name -->
     <string name="login_page">صفحه ورود</string>
     <string name="title_activity_body_state">BodyStateActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
 
 
 </resources>
