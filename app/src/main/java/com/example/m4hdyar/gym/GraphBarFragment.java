@@ -8,16 +8,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BodyStateFragment.OnFragmentInteractionListener} interface
+ * {@link GraphBarFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link BodyStateFragment#newInstance} factory method to
+ * Use the {@link GraphBarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BodyStateFragment extends Fragment {
+public class GraphBarFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -29,7 +37,7 @@ public class BodyStateFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public BodyStateFragment() {
+    public GraphBarFragment() {
         // Required empty public constructor
     }
 
@@ -39,17 +47,19 @@ public class BodyStateFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment BodyStateFragment.
+     * @return A new instance of fragment GraphBarFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BodyStateFragment newInstance(String param1, String param2) {
-        BodyStateFragment fragment = new BodyStateFragment();
+    public static GraphBarFragment newInstance(String param1, String param2) {
+        GraphBarFragment fragment = new GraphBarFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
+
+    BarChart barChart;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,14 +68,38 @@ public class BodyStateFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_body_state, container, false);
+        barChart = (BarChart) getView().findViewById(R.id.Bar_Graph);
 
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        barEntries.add(new BarEntry(35f,0));
+        barEntries.add(new BarEntry(30f,1));
+        barEntries.add(new BarEntry(20f,2));
+        barEntries.add(new BarEntry(21f,3));
+        barEntries.add(new BarEntry(28f,4));
+        barEntries.add(new BarEntry(51f,5));
+        BarDataSet barDataSet = new BarDataSet(barEntries,"Data");
+
+        ArrayList<String> Mounth = new ArrayList<>();
+        Mounth.add("mehr");
+        Mounth.add("aban");
+        Mounth.add("azar");
+        Mounth.add("dey");
+
+        BarData barData = new BarData ((IBarDataSet) Mounth,barDataSet);
+        barChart.setData(barData);
+
+        barChart.setTouchEnabled(true);
+        barChart.setDragEnabled(true);
+        barChart.setScaleEnabled(true);
+
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_graph_bar, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
