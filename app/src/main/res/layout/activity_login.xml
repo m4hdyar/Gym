@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="@+id/editTextUserName"
         app:layout_constraintStart_toStartOf="@+id/editTextUserName"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/Gym_Logo" />
+        app:srcCompat="@mipmap/gym_logo" />
 
     <EditText
         android:id="@+id/editTextUserName"
