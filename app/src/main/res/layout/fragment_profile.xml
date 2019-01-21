@@ -23,7 +23,7 @@
         android:gravity="center_vertical">
         <EditText
             android:gravity="center"
-            android:id="@+id/txtUserName"
+            android:id="@+id/txtFullName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -55,7 +55,7 @@
         android:gravity="center_vertical">
         <EditText
             android:gravity="center"
-            android:id="@+id/txtSubscriptionStart"
+            android:id="@+id/txtRemainDays"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -65,7 +65,7 @@
             android:enabled="false"/>
         <EditText
             android:gravity="center"
-            android:id="@+id/txtSubscriptionEnd"
+            android:id="@+id/txtLatestSubmitSubscription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -86,7 +86,7 @@
         />
     <EditText
         android:gravity="center"
-        android:id="@+id/txtPhone"
+        android:id="@+id/txtTel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textDirection="ltr"
