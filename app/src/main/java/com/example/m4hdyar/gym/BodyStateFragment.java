@@ -8,6 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,6 +58,9 @@ public class BodyStateFragment extends Fragment {
         return fragment;
     }
 
+
+    BarChart barChart;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +73,34 @@ public class BodyStateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_body_state, container, false);
+        View view =inflater.inflate(R.layout.fragment_body_state, container, false);
 
+        barChart = (BarChart) view.findViewById(R.id.Bar_Graph);
+
+        ArrayList<BarEntry> barEntries = new ArrayList<>();
+        barEntries.add(new BarEntry(35f,0));
+        barEntries.add(new BarEntry(30f,1));
+        barEntries.add(new BarEntry(20f,2));
+        barEntries.add(new BarEntry(21f,3));
+        barEntries.add(new BarEntry(28f,4));
+        barEntries.add(new BarEntry(51f,5));
+        BarDataSet barDataSet = new BarDataSet(barEntries,"Data");
+
+        ArrayList<String> Mounth = new ArrayList<>();
+        Mounth.add("mehr");
+        Mounth.add("aban");
+        Mounth.add("azar");
+        Mounth.add("dey");
+
+        BarData barData = new BarData (barDataSet);
+        barChart.setData(barData);
+
+        barChart.setTouchEnabled(true);
+        barChart.setDragEnabled(true);
+        barChart.setScaleEnabled(true);
+
+        // Inflate the layout for this fragment
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

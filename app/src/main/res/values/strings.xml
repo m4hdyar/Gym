@@ -8,8 +8,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_login">Sign in</string>
     <!-- Strings related to login -->
-    <string name="user_name">نام کاربری</string>
-    <string name="password">رمز عبور</string>
+    <string name="user_name">شماره تلفن همراه</string>
+    <string name="password">شماره لاکر</string>
     <string name="login">ورود</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
