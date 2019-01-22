@@ -34,6 +34,10 @@ public class MealdietProgramActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mealdiet_program);
 
+        //Getting user Mealdiet programs
+
+
+
         programRowsList = new ArrayList<>();
         programRecyclerView = (RecyclerView) findViewById(R.id.programRecyclerView);
         programRecyclerView.setHasFixedSize(true);
