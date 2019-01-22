@@ -51,9 +51,10 @@ public class BodyStateFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     //tag for custom queue
-    private final String REQUEST_TAG = getClass().getName();
-    //
-    private EventBus eventBus2;
+    //private final String REQUEST_TAG = getClass().getName();
+
+    BarChart barChart;
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMyEvent(JSONObject response) {
@@ -117,7 +118,7 @@ public class BodyStateFragment extends Fragment {
     }
 
 
-    BarChart barChart;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -187,25 +188,6 @@ public class BodyStateFragment extends Fragment {
         return view;
     }
 
-    public void onEvent(JSONObject response){
-        try {
-            JSONArray profileContentArr = response.getJSONArray("BodyStates");
-            for (int i = 0; i < profileContentArr.length(); i++) {
-
-                JSONObject profileContent = profileContentArr.getJSONObject(i);
-
-                String submitDate = profileContent.getString("Submit_Date");
-                float fat = Float.valueOf(profileContent.getString("Fat"));
-                //add data to list
-                fatList.add(new BodyStateList.FatBodyState(submitDate,fat,i));
-            }
-           // fillFatBar();
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
-
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -213,27 +195,6 @@ public class BodyStateFragment extends Fragment {
         }
     }
 
-    public void onEvent(String response) {
-    //    textView.setText(response);
-    }
-
-    public void onEvent(VolleyError error) {
-      //  textView.setText("That didn't work!");
-    }
-
-//    @Override
-//    public void onStop() {
-//        super.onStop();
-//        WebRequestQueue.getInstance(getActivity()).cancelAll(REQUEST_TAG);
-//        EventBus.getDefault().unregister(getActivity());
-//    }
-//
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        WebRequestQueue.getInstance(getActivity()).cancelAll(REQUEST_TAG);
-//        EventBus.getDefault().register(getActivity());
-//    }
 
 //    @Override
 //    public void onAttach(Context context) {
@@ -313,8 +274,8 @@ public class BodyStateFragment extends Fragment {
         };
 
 
-        //queue.add(arrReq);//Send order in queue to run
-        WebRequestQueue.getInstance(context).addToQueue(arrReq,REQUEST_TAG);
+        queue.add(arrReq);//Send order in queue to run
+        //WebRequestQueue.getInstance(context).addToQueue(arrReq,REQUEST_TAG);
     }
     private void fillFatBar(){
 
@@ -336,29 +297,6 @@ public class BodyStateFragment extends Fragment {
 
     }
 
-    public class MessageEvent{
-        MessageEvent(JSONObject response){
-            try {
-                JSONArray profileContentArr = response.getJSONArray("BodyStates");
-                for (int i = 0; i < profileContentArr.length(); i++) {
 
-                    JSONObject profileContent = profileContentArr.getJSONObject(i);
-
-                    String submitDate = profileContent.getString("Submit_Date");
-                    float fat = Float.valueOf(profileContent.getString("Fat"));
-                    //add data to list
-                    fatList.add(new BodyStateList.FatBodyState(submitDate,fat,i));
-                }
-               // fillFatBar();
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    //@Subscribe(threadMode = ThreadMode.MAIN)
-    //public void onMessageEvent{
-
-//    }
 
 }
