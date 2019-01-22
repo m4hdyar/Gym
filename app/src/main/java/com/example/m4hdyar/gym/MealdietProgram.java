@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,7 +86,7 @@ public class MealdietProgram {
             return this.programRows.get(rowNumber);
         }
 
-        public ArrayList<MealdietProgramRow> getMealDietRows(Context context,final ServerCallBack serverCallBack){
+        public ArrayList<MealdietProgramRow> getMealDietRows(Context context){
             //TODO: Get token from login page
             String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
@@ -121,7 +122,7 @@ public class MealdietProgram {
                                     String thisRowName=rowJson.getString("Name");
                                     mealdietRowsArrayList.add(new MealdietProgramRow(thisRowName,thisRowAmount,thisRowMealTime,thisRowNumber));
                                 }
-                                serverCallBack.onSucceed(response);
+                                EventBus.getDefault().post(mealdietRowsArrayList);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -189,7 +190,7 @@ public class MealdietProgram {
     }
 
     //Getting meal diet programs from server
-    public static void getMealDietPrograms(Context context,final ServerCallBack serverCallBack){
+    public static void getMealDietPrograms(Context context){
         //TODO: Get token from login page
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
@@ -212,8 +213,21 @@ public class MealdietProgram {
                     //TODO:Other error codes need to be checked
                     try {
                         if(response.getInt("Error_Code")==200){
-                            //JSON PARSING IS IN CALLBACK
-                            serverCallBack.onSucceed(response);
+                            //JSON PARSING
+                            try {
+                                JSONArray dietsArr = response.getJSONArray("Meal_Diets");
+                                for(int i = 0; i < dietsArr.length();i++){
+                                    JSONObject programJson= dietsArr.getJSONObject(i);
+                                    String thisDietSubmitDate = programJson.getString("Submit_Date");
+                                    //Converting diet id as integer to string
+                                    int thisDietID = Integer.parseInt(programJson.getString("Meal_Diet_ID"));
+                                    mealdietProgramArrayList.add(new MealdietProgram(thisDietSubmitDate,thisDietID));
+                                }
+                                EventBus.getDefault().post(mealdietProgramArrayList);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -258,7 +272,7 @@ public class MealdietProgram {
     }
 
     //Getting one meal diet days from server
-    public ArrayList<MealdietProgramDay> getMealDietDays(Context context,final ServerCallBack serverCallBack){
+    public ArrayList<MealdietProgramDay> getMealDietDays(Context context){
         //TODO: Get token from login page
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
@@ -290,8 +304,8 @@ public class MealdietProgram {
                                 int thisDayNumber = Integer.parseInt(dayJson.getString("Day_Number"));
                                 int thisDayID = Integer.parseInt(dayJson.getString("Meal_Diet_Day_ID"));
                                 mealdietDaysArrayList.add(new MealdietProgramDay(thisDayNumber,thisDayID));
-                                serverCallBack.onSucceed(response);
                             }
+                            EventBus.getDefault().post(mealdietDaysArrayList);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

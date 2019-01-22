@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +42,8 @@ public class MealdietProgramFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    //Create context
+    Context context;
 
     private OnFragmentInteractionListener mListener;
 
@@ -91,7 +96,7 @@ public class MealdietProgramFragment extends Fragment {
         //TODO: Save this to SQLite
         //This is to find view(NOTE :‌ It is fragment not activity)
         View view = inflater.inflate(R.layout.fragment_mealdiet_program, container, false);
-        Context context = getActivity();
+        context = getActivity();
 
         //Creating a list that gets Program lists
         programsArr = new ArrayList<>();
@@ -216,7 +221,18 @@ public class MealdietProgramFragment extends Fragment {
         return view;
     }
 
+    //On start is not necessary but for event handling by Event Bus you need to register them here.
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -276,22 +292,19 @@ public class MealdietProgramFragment extends Fragment {
          **/
     }
 
+    /**
+     *  From now Event bus event handlers Start
+     */
 
-    //Parsing response from get programs
-    private ArrayList<MealdietProgram> programListParser(JSONObject response) {
-        ArrayList<MealdietProgram> tempProgramArr = new ArrayList<>();
-        try {
-            JSONArray dietsArr = response.getJSONArray("Meal_Diets");
-            for(int i = 0; i < dietsArr.length();i++){
-                JSONObject programJson= dietsArr.getJSONObject(i);
-                String thisDietSubmitDate = programJson.getString("Submit_Date");
-                //Converting diet id as integer to string
-                int thisDietID = Integer.parseInt(programJson.getString("Meal_Diet_ID"));
-                tempProgramArr.add(new MealdietProgram(thisDietSubmitDate,thisDietID));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+    //Parsing response from get programs when getting event program get succeed!
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    private void onProgramGetSucceed(ArrayList<MealdietProgram> programsArr) {
+        //TODO: Add them on top to select
+        //Foreach
+        for (MealdietProgram mealProgram: programsArr) {
+            mealProgram.getMealDietDays(context);
         }
-        return tempProgramArr;
     }
+
+
 }
