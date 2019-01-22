@@ -55,7 +55,7 @@ public class BodyStateFragment extends Fragment {
 
     BarChart barChart;
 
-
+    //!!! It's important without this register event bus won't work , when a JSON Object is posted
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMyEvent(JSONObject response) {
         try {
@@ -74,7 +74,7 @@ public class BodyStateFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
+//Create eventBus for this fragment(need to have Subscribes)
     @Override
     public void onStart() {
         super.onStart();
@@ -133,55 +133,11 @@ public class BodyStateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-          View view =inflater.inflate(R.layout.fragment_body_state, container, false);
+        View view =inflater.inflate(R.layout.fragment_body_state, container, false);
 
-        //test getting value of fat
-//        BodyStateList.addFatBodyState("2019/01/22",24.3f,1);
-//        BodyStateList.addFatBodyState("2019/01/22",78.5f,1);
-//        BodyStateList.addFatBodyState("2019/01/22",12.3f,1);
-//        BodyStateList.addFatBodyState("2019/01/22",20.3f,1);
-//
-//        for(int i = 0; i < BodyStateList.fatList.size(); i++){
-//            System.out.println(BodyStateList.fatList.get(i).getFat());
-//        }
-
-
-
-
-        //testing how barGraph shows
         barChart = (BarChart) view.findViewById(R.id.Bar_Graph);
-//
-//        ArrayList<BarEntry> barEntries = new ArrayList<>();
-//        barEntries.add(new BarEntry(35f,0));
-//        barEntries.add(new BarEntry(30f,1));
-//        barEntries.add(new BarEntry(20f,2));
-//        barEntries.add(new BarEntry(21f,3));
-//        barEntries.add(new BarEntry(28f,4));
-//        barEntries.add(new BarEntry(51f,5));
-//        BarDataSet barDataSet = new BarDataSet(barEntries,"Data");
-//
-//        ArrayList<String> Mounth = new ArrayList<>();
-//        Mounth.add("mehr");
-//        Mounth.add("aban");
-//        Mounth.add("azar");
-//        Mounth.add("dey");
-//
-//        BarData barData = new BarData (barDataSet);
-//        barChart.setData(barData);
-//
-//        barChart.setTouchEnabled(true);
-//        barChart.setDragEnabled(true);
-//        barChart.setScaleEnabled(true);
 
         //Getting data in sequence, then importing them in front-end
-//        getFatData(new ServerCallBack() {
-//            @Override
-//            public void onSucceed(JSONObject response) {
-//
-//            }
-//        });
-
-
         getFatData();
 
         // Inflate the layout for this fragment
@@ -275,17 +231,14 @@ public class BodyStateFragment extends Fragment {
 
 
         queue.add(arrReq);//Send order in queue to run
-        //WebRequestQueue.getInstance(context).addToQueue(arrReq,REQUEST_TAG);
+
     }
     private void fillFatBar(){
-
-//        barChart = (BarChart) getView().findViewById(R.id.Bar_Graph);
-
         ArrayList<BarEntry> barEntries = new ArrayList<>();
-        barEntries.add(new BarEntry(BodyStateList.fatList.get(0).getFatId(),BodyStateList.fatList.get(0).getFat()));
-        barEntries.add(new BarEntry(BodyStateList.fatList.get(1).getFatId(),BodyStateList.fatList.get(1).getFat()));
-        barEntries.add(new BarEntry(BodyStateList.fatList.get(2).getFatId(),BodyStateList.fatList.get(2).getFat()));
-        Log.e("BarChart", String.valueOf(BodyStateList.fatList.get(0).getFatId()));
+
+        for(int i=0; i<BodyStateList.fatList.size();i++) {
+            barEntries.add(new BarEntry(BodyStateList.fatList.get(i).getFatId(), BodyStateList.fatList.get(i).getFat()));
+        }
         BarDataSet barDataSet = new BarDataSet(barEntries,"Data");
 
         BarData barData = new BarData (barDataSet);
@@ -294,6 +247,9 @@ public class BodyStateFragment extends Fragment {
         barChart.setTouchEnabled(true);
         barChart.setDragEnabled(true);
         barChart.setScaleEnabled(true);
+
+        barChart.notifyDataSetChanged();//notify for dynamic changes
+        barChart.invalidate();//refresh data
 
     }
 
