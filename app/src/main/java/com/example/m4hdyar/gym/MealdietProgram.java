@@ -15,7 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +85,7 @@ public class MealdietProgram {
             return this.programRows.get(rowNumber);
         }
 
-        public ArrayList<MealdietProgramRow> getMealDietRows(Context context){
+        public ArrayList<MealdietProgramRow> getMealDietRows(Context context,final ServerCallBack serverCallBack){
             //TODO: Get token from login page
             String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
@@ -102,7 +101,6 @@ public class MealdietProgram {
 
             //Create an array list
             final ArrayList<MealdietProgramRow> mealdietRowsArrayList = new ArrayList<>();
-
             JsonObjectRequest arrReq = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
@@ -123,6 +121,7 @@ public class MealdietProgram {
                                     String thisRowName=rowJson.getString("Name");
                                     mealdietRowsArrayList.add(new MealdietProgramRow(thisRowName,thisRowAmount,thisRowMealTime,thisRowNumber));
                                 }
+                                serverCallBack.onSucceed(response);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -190,7 +189,7 @@ public class MealdietProgram {
     }
 
     //Getting meal diet programs from server
-    public static ArrayList<MealdietProgram> getMealDietPrograms(Context context){
+    public static void getMealDietPrograms(Context context,final ServerCallBack serverCallBack){
         //TODO: Get token from login page
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
@@ -213,15 +212,8 @@ public class MealdietProgram {
                     //TODO:Other error codes need to be checked
                     try {
                         if(response.getInt("Error_Code")==200){
-                            JSONArray dietsArr = response.getJSONArray("Meal_Diets");
-                            for(int i = 0; i < dietsArr.length();i++){
-
-                                JSONObject programJson= dietsArr.getJSONObject(i);
-                                String thisDietSubmitDate = programJson.getString("Submit_Date");
-                                //Converting diet id as integer to string
-                                int thisDietID = Integer.parseInt(programJson.getString("Meal_Diet_ID"));
-                                mealdietProgramArrayList.add(new MealdietProgram(thisDietSubmitDate,thisDietID));
-                            }
+                            //JSON PARSING IS IN CALLBACK
+                            serverCallBack.onSucceed(response);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -262,11 +254,11 @@ public class MealdietProgram {
         queue.add(arrReq);
 
 
-        return mealdietProgramArrayList;
+        return;
     }
 
     //Getting one meal diet days from server
-    public ArrayList<MealdietProgramDay> getMealDietDays(Context context){
+    public ArrayList<MealdietProgramDay> getMealDietDays(Context context,final ServerCallBack serverCallBack){
         //TODO: Get token from login page
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
@@ -295,9 +287,10 @@ public class MealdietProgram {
                             for(int i = 0; i < daysArr.length();i++){
                                 JSONObject dayJson= daysArr.getJSONObject(i);
                                 //Converting strings to int
-                                int thisDayNumber = Integer.parseInt(dayJson.getString("Meal_Diet_ID"));
-                                int thisDayID = Integer.parseInt(dayJson.getString("Meal_Diet_ID"));
+                                int thisDayNumber = Integer.parseInt(dayJson.getString("Day_Number"));
+                                int thisDayID = Integer.parseInt(dayJson.getString("Meal_Diet_Day_ID"));
                                 mealdietDaysArrayList.add(new MealdietProgramDay(thisDayNumber,thisDayID));
+                                serverCallBack.onSucceed(response);
                             }
                         }
                     } catch (JSONException e) {
@@ -342,5 +335,11 @@ public class MealdietProgram {
         return mealdietDaysArrayList;
     }
 
+    public String getSubmitDate() {
+        return submitDate;
+    }
 
+    public int getProgramID() {
+        return programID;
+    }
 }
