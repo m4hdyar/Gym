@@ -28,14 +28,16 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
             android:layout_weight="2"
             android:enabled="false"/>
+
         <ImageView
-            android:id="@+id/txtUserImage"
+            android:id="@+id/imgUserImage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
             tools:srcCompat="@tools:sample/avatars[7]" />
     </LinearLayout>
     <EditText
@@ -45,7 +47,6 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Eshterake Faal"
         android:enabled="false"
         />
     <LinearLayout
@@ -60,7 +61,6 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="Name"
             android:layout_weight="2"
             android:enabled="false"/>
         <EditText
@@ -69,8 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name"
+            android:inputType="text|date"
             android:layout_weight="2"
             android:enabled="false"/>
     </LinearLayout>
@@ -80,8 +79,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="email@gmail.com"
+        android:inputType="textEmailAddress"
         android:enabled="false"
         />
     <EditText
@@ -91,8 +89,7 @@
         android:layout_height="wrap_content"
         android:textDirection="ltr"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="0919 437 7043"
+        android:inputType="text|phone"
         android:enabled="false"
         />
 

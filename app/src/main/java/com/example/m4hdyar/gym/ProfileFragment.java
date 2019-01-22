@@ -18,6 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,8 +50,16 @@ public class ProfileFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     //variables of profile page
-    EditText txtEmail,txtFullName,txtTel,txtImage,txtSubscriptionName,txtRemainDays,txtLatestSubscriptionDate;
+    EditText txtEmail;
+    EditText txtFullName;
+    EditText txtTel;
+    EditText txtImage;
+    EditText txtSubscriptionName;
+    EditText txtRemainDays;
+    EditText txtLatestSubscriptionDate;
     ImageView imgAthlete;
+
+    String imageAddr;
 
 
     public ProfileFragment() {
@@ -93,8 +103,11 @@ public class ProfileFragment extends Fragment {
         txtSubscriptionName = (EditText) view.findViewById(R.id.txtUserSubscription);
         txtRemainDays = (EditText) view.findViewById(R.id.txtRemainDays);
         txtLatestSubscriptionDate = (EditText) view.findViewById(R.id.txtLatestSubmitSubscription);
+        imgAthlete =(ImageView) view.findViewById(R.id.imgUserImage);
 
         fillInTheProfile();
+
+
 
         return view;
     }
@@ -140,7 +153,7 @@ public class ProfileFragment extends Fragment {
 
     private void fillInTheProfile() {
 
-        Context context = getActivity();
+        final Context context = getActivity();
         RequestQueue queue = Volley.newRequestQueue(context);
 
         String baseUrl = "https://sayehparsaei.com/GymAPI/";
@@ -158,18 +171,19 @@ public class ProfileFragment extends Fragment {
 
                             JSONObject profileContent= profileContentArr.getJSONObject(i);
 
+
+
                             String name = profileContent.getString("Name");
                             String family = profileContent.getString("Family");
                             txtFullName.append(name+" "+family);
 
-                            //TODO:: how to download image by its address
-                            String image = profileContent.getString("image");
+
 
                             String subscriptionName = profileContent.getString("Subscription_Name");
                             txtSubscriptionName.append(subscriptionName);
 
                             String remainDays = profileContent.getString("Remain_Days");
-                            txtRemainDays.append("مانده است"+remainDays);
+                            txtRemainDays.append(remainDays+" مانده است");
 
                             String latestSubmitDate = profileContent.getString("Latest_Subscription_Date");
                             txtLatestSubscriptionDate.append(latestSubmitDate);
@@ -177,6 +191,25 @@ public class ProfileFragment extends Fragment {
 
                             String email = profileContent.getString("Email");
                             txtEmail.append(email);
+
+                            String tel = profileContent.getString("Tel");
+                            txtTel.append(tel);
+
+                            imageAddr = profileContent.getString("Image");
+                            Picasso.get().load(imageAddr).into(imgAthlete, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.e("Picasso","Succeed");
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    Log.e("Picasso","Fail");
+                                    e.printStackTrace();
+
+                                }
+                            });
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
