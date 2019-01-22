@@ -51,30 +51,9 @@ public class BodyStateFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    //tag for custom queue
-    //private final String REQUEST_TAG = getClass().getName();
-
     BarChart barChart;
+    String onShow;
 
-    //!!! It's important without this register event bus won't work , when a JSON Object is posted
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMyEvent(JSONObject response) {
-        try {
-            JSONArray profileContentArr = response.getJSONArray("BodyStates");
-            for (int i = 0; i < profileContentArr.length(); i++) {
-
-                JSONObject profileContent = profileContentArr.getJSONObject(i);
-
-                String submitDate = profileContent.getString("Submit_Date");
-                float fat = Float.valueOf(profileContent.getString("Fat"));
-                //add data to list
-                dataBodyStatesList.add(new BodyStateList.DataBodyState(submitDate,fat,i));
-            }
-            fillBar();
-        }catch (JSONException e){
-            e.printStackTrace();
-        }
-    }
 //Create eventBus for this fragment(need to have Subscribes)
     @Override
     public void onStart() {
@@ -135,11 +114,11 @@ public class BodyStateFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_body_state, container, false);
-
+        onShow="Fat";
         barChart = (BarChart) view.findViewById(R.id.Bar_Graph);
 
-        //Getting data in sequence, then importing them in front-end
-        getFatData();
+        //Getting data
+        getBodyStateData();
 
         // Inflate the layout for this fragment
         return view;
@@ -185,55 +164,8 @@ public class BodyStateFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    //get data of athlete's fat
-    private void getFatData() {
-        final EventBus eventBus=EventBus.getDefault();//create eventBus
-        final Context context = getActivity();
-        RequestQueue queue = Volley.newRequestQueue(context);
 
-        String baseUrl = "https://sayehparsaei.com/GymAPI/";
-        String file = "GetBodyState";
-        String uri = baseUrl + file;
-        //It's what fragment push in queue - Get  data and it specified by token and token set when user login
-        JsonObjectRequest arrReq = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                if (response.length() > 0) {
-
-                    try {
-                        if (response.getInt("Error_Code")==200){
-                            //serverCallBack.onSucceed(response);
-                            EventBus.getDefault().post(response);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    Log.d("Volley",response.toString());
-
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Volley", "Error on response."+error.getMessage());
-            }
-        })
-
-        {
-            @Override
-            public Map<String, String> getHeaders() {
-                HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
-                return headers;
-            }
-        };
-
-
-        queue.add(arrReq);//Send order in queue to run
-
-    }
+    //fill data after they catch from server
     private void fillBar(){
         ArrayList<BarEntry> barEntries = new ArrayList<>();
 
@@ -253,6 +185,94 @@ public class BodyStateFragment extends Fragment {
         barChart.invalidate();//refresh data
 
     }
+
+
+    //!!! It's important without this register event bus won't work , when a JSON Object is posted
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMyEvent(JSONObject response) {
+        try {
+            JSONArray profileContentArr = response.getJSONArray("BodyStates");
+            for (int i = 0; i < profileContentArr.length(); i++) {
+
+                JSONObject profileContent = profileContentArr.getJSONObject(i);
+
+                String submitDate = profileContent.getString("Submit_Date");
+                float value = 0;
+                switch (onShow) {
+                    case "Fat":
+                        value = Float.valueOf(profileContent.getString("Fat"));
+                        break;
+                    case "Arm_Around":
+                        value = Float.valueOf(profileContent.getString("Arm_Around"));
+                        break;
+                    case "Belly_Size":
+                        value = Float.valueOf(profileContent.getString("Belly_Size"));
+                        break;
+                    case "Thigh_Size":
+                        value = Float.valueOf(profileContent.getString("Thigh_Size"));
+                        break;
+                    case "Weight":
+                        value = Float.valueOf(profileContent.getString("Weight"));
+                        break;
+                        default:
+                            break;
+                }
+
+
+
+                //add data to list
+                dataBodyStatesList.add(new BodyStateList.DataBodyState(submitDate,value,i));
+            }
+            fillBar();
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+
+    //get data of athlete's body state data
+    private void getBodyStateData() {
+        final EventBus eventBus=EventBus.getDefault();//create eventBus
+        final Context context = getActivity();
+        RequestQueue queue = Volley.newRequestQueue(context);
+
+        String baseUrl = "https://sayehparsaei.com/GymAPI/";
+        String file = "GetBodyState";
+        String uri = baseUrl + file;
+        //It's what fragment push in queue - Get  data and it specified by token and token set when user login
+        JsonObjectRequest arrReq = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                if (response.length() > 0) {
+                    try {
+                        if (response.getInt("Error_Code")==200){
+                            EventBus.getDefault().post(response);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Volley",response.toString());
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Volley", "Error on response."+error.getMessage());
+            }
+        })
+
+        {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
+                return headers;
+            }
+        };
+        queue.add(arrReq);//Send order in queue to run
+    }
+
 
 
 
