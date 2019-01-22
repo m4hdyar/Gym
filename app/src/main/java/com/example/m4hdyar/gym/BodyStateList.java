@@ -3,37 +3,37 @@ package com.example.m4hdyar.gym;
 import java.util.ArrayList;
 
 public class BodyStateList {
-    static ArrayList<FatBodyState> fatList;
+    static ArrayList<DataBodyState> dataBodyStatesList;
     static{
-        fatList = new ArrayList<>();
+        dataBodyStatesList = new ArrayList<>();
     }
 
-    static class FatBodyState {
+    static class DataBodyState {
         private String submitDate;
-        private float fat;
-        private int fatId;
+        private float dataList;
+        private int dataListId;
 
-        public FatBodyState(String submitDate, float fat, int fatId) {
+        public DataBodyState(String submitDate, float dataList, int dataListId) {
             this.submitDate = submitDate;
-            this.fat = fat;
-            this.fatId = fatId;
+            this.dataList = dataList;
+            this.dataListId = dataListId;
         }
 
         public String getSubmitDate() {
             return submitDate;
         }
 
-        public float getFat() {
-            return fat;
+        public float getDataList() {
+            return dataList;
         }
 
-        public int getFatId() {
-            return fatId;
+        public int getDataListId() {
+            return dataListId;
         }
     }
-    public static void addFatBodyState(String submitDate, float fat, int fatId){
+    public static void addDataBodyState(String submitDate, float dataList, int dataListId){
 
-        fatList.add(new FatBodyState(submitDate,fat,fatId));
+        dataBodyStatesList.add(new DataBodyState(submitDate,dataList,dataListId));
 
     }
 
