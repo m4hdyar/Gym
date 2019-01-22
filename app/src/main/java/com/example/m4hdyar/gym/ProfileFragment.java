@@ -166,6 +166,7 @@ public class ProfileFragment extends Fragment {
                 if (response.length() > 0) {
 
                     try {
+                        if (response.getInt("Error_Code")==200){
                         JSONArray profileContentArr = response.getJSONArray("Profile_Content");
                         for(int i = 0; i < profileContentArr.length();i++){
 
@@ -210,6 +211,7 @@ public class ProfileFragment extends Fragment {
                                 }
                             });
 
+                         }
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
