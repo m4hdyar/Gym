@@ -33,7 +33,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.m4hdyar.gym.BodyStateList.fatList;
+import static com.example.m4hdyar.gym.BodyStateList.dataBodyStatesList;
+import static com.example.m4hdyar.gym.BodyStateList.dataBodyStatesList;
 
 
 /**
@@ -67,9 +68,9 @@ public class BodyStateFragment extends Fragment {
                 String submitDate = profileContent.getString("Submit_Date");
                 float fat = Float.valueOf(profileContent.getString("Fat"));
                 //add data to list
-                fatList.add(new BodyStateList.FatBodyState(submitDate,fat,i));
+                dataBodyStatesList.add(new BodyStateList.DataBodyState(submitDate,fat,i));
             }
-            fillFatBar();
+            fillBar();
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -233,11 +234,11 @@ public class BodyStateFragment extends Fragment {
         queue.add(arrReq);//Send order in queue to run
 
     }
-    private void fillFatBar(){
+    private void fillBar(){
         ArrayList<BarEntry> barEntries = new ArrayList<>();
 
-        for(int i=0; i<BodyStateList.fatList.size();i++) {
-            barEntries.add(new BarEntry(BodyStateList.fatList.get(i).getFatId(), BodyStateList.fatList.get(i).getFat()));
+        for(int i=0; i<BodyStateList.dataBodyStatesList.size();i++) {
+            barEntries.add(new BarEntry(BodyStateList.dataBodyStatesList.get(i).getDataListId(), BodyStateList.dataBodyStatesList.get(i).getDataList()));
         }
         BarDataSet barDataSet = new BarDataSet(barEntries,"Data");
 
