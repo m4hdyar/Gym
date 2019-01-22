@@ -199,11 +199,12 @@ public class BodyStateFragment extends Fragment {
                 //add data to list
                 fatList.add(new BodyStateList.FatBodyState(submitDate,fat,i));
             }
-            fillFatBar();
+           // fillFatBar();
         }catch (JSONException e){
             e.printStackTrace();
         }
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -348,7 +349,7 @@ public class BodyStateFragment extends Fragment {
                     //add data to list
                     fatList.add(new BodyStateList.FatBodyState(submitDate,fat,i));
                 }
-                fillFatBar();
+               // fillFatBar();
             }catch (JSONException e){
                 e.printStackTrace();
             }
