@@ -93,28 +93,11 @@ public class MealdietProgramFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mealdiet_program, container, false);
         Context context = getActivity();
 
+        //Creating a list that gets Program lists
         programsArr = new ArrayList<>();
-        MealdietProgram.getMealDietPrograms(context, new ServerCallBack() {
-            @Override
-            public void onSucceed(JSONObject response) {
-                try {
-                    JSONArray dietsArr = response.getJSONArray("Meal_Diets");
-                    for(int i = 0; i < dietsArr.length();i++){
-                        JSONObject programJson= dietsArr.getJSONObject(i);
-                        String thisDietSubmitDate = programJson.getString("Submit_Date");
-                        //Converting diet id as integer to string
-                        int thisDietID = Integer.parseInt(programJson.getString("Meal_Diet_ID"));
-                        programsArr.add(new MealdietProgram(thisDietSubmitDate,thisDietID));
-                    }
-                    for(int i=0;i<programsArr.size();i++){
-                        System.out.println(programsArr.get(i).getSubmitDate());
-                        System.out.println(programsArr.get(i).getProgramID());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+
+        //Update List
+        updateProgramList();
 
 
         programRowsList = new ArrayList<>();
@@ -233,6 +216,8 @@ public class MealdietProgramFragment extends Fragment {
         return view;
     }
 
+
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -275,22 +260,38 @@ public class MealdietProgramFragment extends Fragment {
 
 
     //Added by me
-//    ServerCallBack programFetchListener=new ServerCallBack() {
-//        @Override
-//        public void onSucceed(JSONObject response) {
-//
-//        }
-//    };
-//    ServerCallBack programDaysFetchListener=new ServerCallBack() {
-//        @Override
-//        public void onSucceed(JSONObject response) {
-//
-//        }
-//    };
-//    ServerCallBack programRowsFetchListener=new ServerCallBack() {
-//        @Override
-//        public void onSucceed(JSONObject response) {
-//
-//        }
-//    };
+
+    //Update the list
+    private void updateProgramList() {
+        //getting array list
+        //TODO:Here
+        /**
+        MealdietProgram.getMealDietPrograms(context, new ServerCallBack() {
+            @Override
+            public void onSucceed(JSONObject response) {
+                programsArr = programListParser(response);
+                //for (MealdietProgram program = programsArr.iterator(); )
+            }
+        });
+         **/
+    }
+
+
+    //Parsing response from get programs
+    private ArrayList<MealdietProgram> programListParser(JSONObject response) {
+        ArrayList<MealdietProgram> tempProgramArr = new ArrayList<>();
+        try {
+            JSONArray dietsArr = response.getJSONArray("Meal_Diets");
+            for(int i = 0; i < dietsArr.length();i++){
+                JSONObject programJson= dietsArr.getJSONObject(i);
+                String thisDietSubmitDate = programJson.getString("Submit_Date");
+                //Converting diet id as integer to string
+                int thisDietID = Integer.parseInt(programJson.getString("Meal_Diet_ID"));
+                tempProgramArr.add(new MealdietProgram(thisDietSubmitDate,thisDietID));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return tempProgramArr;
+    }
 }

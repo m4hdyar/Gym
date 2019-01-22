@@ -55,6 +55,39 @@ public class BodyStateFragment extends Fragment {
     //
     private EventBus eventBus2;
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMyEvent(JSONObject response) {
+        try {
+            JSONArray profileContentArr = response.getJSONArray("BodyStates");
+            for (int i = 0; i < profileContentArr.length(); i++) {
+
+                JSONObject profileContent = profileContentArr.getJSONObject(i);
+
+                String submitDate = profileContent.getString("Submit_Date");
+                float fat = Float.valueOf(profileContent.getString("Fat"));
+                //add data to list
+                fatList.add(new BodyStateList.FatBodyState(submitDate,fat,i));
+            }
+            fillFatBar();
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -153,7 +186,7 @@ public class BodyStateFragment extends Fragment {
         // Inflate the layout for this fragment
         return view;
     }
-@Subscribe
+
     public void onEvent(JSONObject response){
         try {
             JSONArray profileContentArr = response.getJSONArray("BodyStates");
@@ -187,19 +220,19 @@ public class BodyStateFragment extends Fragment {
       //  textView.setText("That didn't work!");
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        WebRequestQueue.getInstance(getActivity()).cancelAll(REQUEST_TAG);
-        EventBus.getDefault().unregister(getActivity());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        WebRequestQueue.getInstance(getActivity()).cancelAll(REQUEST_TAG);
-        EventBus.getDefault().register(getActivity());
-    }
+//    @Override
+//    public void onStop() {
+//        super.onStop();
+//        WebRequestQueue.getInstance(getActivity()).cancelAll(REQUEST_TAG);
+//        EventBus.getDefault().unregister(getActivity());
+//    }
+//
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        WebRequestQueue.getInstance(getActivity()).cancelAll(REQUEST_TAG);
+//        EventBus.getDefault().register(getActivity());
+//    }
 
 //    @Override
 //    public void onAttach(Context context) {
@@ -251,7 +284,7 @@ public class BodyStateFragment extends Fragment {
                     try {
                         if (response.getInt("Error_Code")==200){
                             //serverCallBack.onSucceed(response);
-                            eventBus.post(response);
+                            EventBus.getDefault().post(response);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
