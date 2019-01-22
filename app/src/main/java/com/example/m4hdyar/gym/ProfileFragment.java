@@ -176,25 +176,25 @@ public class ProfileFragment extends Fragment {
 
                             String name = profileContent.getString("Name");
                             String family = profileContent.getString("Family");
-                            txtFullName.append(name+" "+family);
+                            txtFullName.setText(name+" "+family);
 
 
 
                             String subscriptionName = profileContent.getString("Subscription_Name");
-                            txtSubscriptionName.append(subscriptionName);
+                            txtSubscriptionName.setText(subscriptionName);
 
                             String remainDays = profileContent.getString("Remain_Days");
-                            txtRemainDays.append(remainDays+" مانده است");
+                            txtRemainDays.setText(remainDays+" مانده است");
 
                             String latestSubmitDate = profileContent.getString("Latest_Subscription_Date");
-                            txtLatestSubscriptionDate.append(latestSubmitDate);
+                            txtLatestSubscriptionDate.setText(latestSubmitDate);
 
 
                             String email = profileContent.getString("Email");
-                            txtEmail.append(email);
+                            txtEmail.setText(email);
 
                             String tel = profileContent.getString("Tel");
-                            txtTel.append(tel);
+                            txtTel.setText(tel);
 
                             imageAddr = profileContent.getString("Image");
                             Picasso.get().load(imageAddr).into(imgAthlete, new Callback() {
