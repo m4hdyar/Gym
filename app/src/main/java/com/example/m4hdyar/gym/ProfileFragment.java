@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,6 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +48,19 @@ public class ProfileFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    //variables of profile page
     EditText txtEmail;
+    EditText txtFullName;
+    EditText txtTel;
+    EditText txtImage;
+    EditText txtSubscriptionName;
+    EditText txtRemainDays;
+    EditText txtLatestSubscriptionDate;
+    ImageView imgAthlete;
+
+    String imageAddr;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -77,14 +92,22 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container,false);
         // Inflate the layout for this fragment
         txtEmail = (EditText) view.findViewById(R.id.txtUserEmail);
-        testVolley();
+        txtFullName = (EditText) view.findViewById(R.id.txtFullName);
+        txtTel = (EditText) view.findViewById(R.id.txtTel);
+        txtSubscriptionName = (EditText) view.findViewById(R.id.txtUserSubscription);
+        txtRemainDays = (EditText) view.findViewById(R.id.txtRemainDays);
+        txtLatestSubscriptionDate = (EditText) view.findViewById(R.id.txtLatestSubmitSubscription);
+        imgAthlete =(ImageView) view.findViewById(R.id.imgUserImage);
+
+        fillInTheProfile();
+
+
 
         return view;
     }
@@ -128,15 +151,15 @@ public class ProfileFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void testVolley() {
+    private void fillInTheProfile() {
 
-        Context context = getActivity();
+        final Context context = getActivity();
         RequestQueue queue = Volley.newRequestQueue(context);
 
         String baseUrl = "https://sayehparsaei.com/GymAPI/";
         String file = "Profile";
         String uri = baseUrl + file;
-
+        //It's what fragment push in queue - Get  data and it specified by token and token set when user login
         JsonObjectRequest arrReq = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -145,9 +168,48 @@ public class ProfileFragment extends Fragment {
                     try {
                         JSONArray profileContentArr = response.getJSONArray("Profile_Content");
                         for(int i = 0; i < profileContentArr.length();i++){
+
                             JSONObject profileContent= profileContentArr.getJSONObject(i);
+
+
+
+                            String name = profileContent.getString("Name");
+                            String family = profileContent.getString("Family");
+                            txtFullName.append(name+" "+family);
+
+
+
+                            String subscriptionName = profileContent.getString("Subscription_Name");
+                            txtSubscriptionName.append(subscriptionName);
+
+                            String remainDays = profileContent.getString("Remain_Days");
+                            txtRemainDays.append(remainDays+" مانده است");
+
+                            String latestSubmitDate = profileContent.getString("Latest_Subscription_Date");
+                            txtLatestSubscriptionDate.append(latestSubmitDate);
+
+
                             String email = profileContent.getString("Email");
                             txtEmail.append(email);
+
+                            String tel = profileContent.getString("Tel");
+                            txtTel.append(tel);
+
+                            imageAddr = profileContent.getString("Image");
+                            Picasso.get().load(imageAddr).into(imgAthlete, new Callback() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.e("Picasso","Succeed");
+                                }
+
+                                @Override
+                                public void onError(Exception e) {
+                                    Log.e("Picasso","Fail");
+                                    e.printStackTrace();
+
+                                }
+                            });
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -174,6 +236,6 @@ public class ProfileFragment extends Fragment {
             }
         };
 
-        queue.add(arrReq);
+        queue.add(arrReq);//Send order in queue to run
     }
 }
