@@ -75,6 +75,16 @@ public class BodyStateFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_body_state, container, false);
 
+        //test getting value of fat
+        BodyStateList.addFatBodyState("2019/01/22",24.3f,1);
+        BodyStateList.addFatBodyState("2019/01/22",78.5f,1);
+        BodyStateList.addFatBodyState("2019/01/22",12.3f,1);
+        BodyStateList.addFatBodyState("2019/01/22",20.3f,1);
+
+        for(int i = 0; i < BodyStateList.fatList.size(); i++){
+            System.out.println(BodyStateList.fatList.get(i).getFat());
+        }
+
         barChart = (BarChart) view.findViewById(R.id.Bar_Graph);
 
         ArrayList<BarEntry> barEntries = new ArrayList<>();
@@ -141,4 +151,7 @@ public class BodyStateFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    //get data of athlete's fat
+
 }

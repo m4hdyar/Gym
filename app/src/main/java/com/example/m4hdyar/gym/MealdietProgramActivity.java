@@ -46,7 +46,7 @@ public class MealdietProgramActivity extends AppCompatActivity {
 
         //TODO:Delete this and connect to database
         //Creating some temp lists to see the result
-        programTest = new MealdietProgram(new Date());
+        programTest = new MealdietProgram("58",88);
         MealdietProgram.MealdietProgramDay programDayTest = programTest.addOneDay(0);
 
         programRowsList.add(
@@ -82,7 +82,7 @@ public class MealdietProgramActivity extends AppCompatActivity {
 
 
 
-        programTest2 = new MealdietProgram(new Date());
+        programTest2 = new MealdietProgram("2",2);
         MealdietProgram.MealdietProgramDay programDayTest2 = programTest2.addOneDay(1);
 
         programRowsList2 = new ArrayList<>();
