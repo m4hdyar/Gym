@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    entries of spinner
+    <string-array name="spinner_name">
+    <item>جربی</item>
+    <item>دور بازو</item>
+    <item>دور شکم</item>
+    <item>دور پا</item>
+    <item>وزن</item>
+    </string-array>
+</resources>

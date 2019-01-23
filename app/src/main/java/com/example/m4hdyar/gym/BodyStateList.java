@@ -37,4 +37,8 @@ public class BodyStateList {
 
     }
 
+    public static void clearDataBodyState(){
+        dataBodyStatesList.clear();
+    }
+
 }

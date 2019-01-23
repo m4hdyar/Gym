@@ -8,6 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,6 +22,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.DataSet;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -45,12 +49,13 @@ import static com.example.m4hdyar.gym.BodyStateList.dataBodyStatesList;
  * Use the {@link BodyStateFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BodyStateFragment extends Fragment {
+public class BodyStateFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    Spinner spinner;
     BarChart barChart;
     String onShow;
 
@@ -110,15 +115,62 @@ public class BodyStateFragment extends Fragment {
 
     }
 
+    //By changing spinner item this function call
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int pos, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+        //depend on position of item onShow pass to getData
+        switch (pos) {
+            case 0:
+                onShow="Fat";
+                break;
+            case 1:
+                onShow="Arm_Around";
+                break;
+            case 2:
+                onShow="Belly_Size";
+                break;
+            case 3:
+                onShow="Thigh_Size";
+                break;
+            case 4:
+                onShow="Weight";
+                break;
+            default:
+                onShow="Fat";
+                break;
+        }
+        //after clicking on spinner data get form server by this function
+        getBodyStateData();
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Another interface callback
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_body_state, container, false);
-        onShow="Fat";
+
+        Context context = getActivity();
+
         barChart = (BarChart) view.findViewById(R.id.Bar_Graph);
 
-        //Getting data
-        getBodyStateData();
+
+        spinner = (Spinner) view.findViewById(R.id.spinner_body_state);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+                R.array.spinner_name, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(this);
+
 
         // Inflate the layout for this fragment
         return view;
@@ -167,7 +219,9 @@ public class BodyStateFragment extends Fragment {
 
     //fill data after they catch from server
     private void fillBar(){
+
         ArrayList<BarEntry> barEntries = new ArrayList<>();
+
 
         for(int i=0; i<BodyStateList.dataBodyStatesList.size();i++) {
             barEntries.add(new BarEntry(BodyStateList.dataBodyStatesList.get(i).getDataListId(), BodyStateList.dataBodyStatesList.get(i).getDataList()));
@@ -175,12 +229,15 @@ public class BodyStateFragment extends Fragment {
         BarDataSet barDataSet = new BarDataSet(barEntries,"Data");
 
         BarData barData = new BarData (barDataSet);
+
         barChart.setData(barData);
 
         barChart.setTouchEnabled(true);
         barChart.setDragEnabled(true);
         barChart.setScaleEnabled(true);
 
+        barDataSet.notifyDataSetChanged();
+        barData.notifyDataChanged();
         barChart.notifyDataSetChanged();//notify for dynamic changes
         barChart.invalidate();//refresh data
 
@@ -190,6 +247,8 @@ public class BodyStateFragment extends Fragment {
     //!!! It's important without this register event bus won't work , when a JSON Object is posted
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMyEvent(JSONObject response) {
+        //clear previous bar
+        BodyStateList.clearDataBodyState();
         try {
             JSONArray profileContentArr = response.getJSONArray("BodyStates");
             for (int i = 0; i < profileContentArr.length(); i++) {

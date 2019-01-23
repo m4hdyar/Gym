@@ -5,18 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".BodyStateFragment">
+    tools:context=".BodyStateFragment"
+    tools:textDirection="rtl">
 
     <Spinner
         android:id="@+id/spinner_body_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:alwaysDrawnWithCache="true"
+        android:entries="@array/spinner_name"
         app:layout_constraintBottom_toTopOf="@+id/Bar_Graph"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:spinnerMode="dropdown"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/Bar_Graph"
