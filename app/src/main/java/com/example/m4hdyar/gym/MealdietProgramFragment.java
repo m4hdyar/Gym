@@ -1,6 +1,8 @@
 package com.example.m4hdyar.gym;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,10 +11,19 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.example.m4hdyar.gym.lists.DietDayRowsList;
+import com.example.m4hdyar.gym.lists.DietDaysList;
+import com.example.m4hdyar.gym.lists.MealdietProgramList;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,16 +56,16 @@ public class MealdietProgramFragment extends Fragment {
     //Create context
     Context context;
 
+    //Menu menu;
+
     private OnFragmentInteractionListener mListener;
 
     //Defining Program RecyclerView and Adapter
     RecyclerView programRecyclerView;
-    MealdietListAdapter programListAdapter,programListAdapter2;
+    MealdietListAdapter programListAdapter;
 
-    List<MealdietProgram.MealdietProgramDay.MealdietProgramRow> programRowsList,programRowsList2;
+    List<MealdietProgram.MealdietProgramDay.MealdietProgramRow> programRowsList;
 
-    //TODO:It is a test you can have array of programs too
-    MealdietProgram programTest,programTest2;
     ArrayList<MealdietProgram> programsArr;
 
 
@@ -83,6 +94,10 @@ public class MealdietProgramFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Setting actionbar customizable
+        setHasOptionsMenu(true);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -103,101 +118,19 @@ public class MealdietProgramFragment extends Fragment {
 
         //Update List
         updateProgramList();
+//        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+//        toolbar.setBackground(new ColorDrawable(Color.RED));
 
-
-        programRowsList = new ArrayList<>();
         programRecyclerView = (RecyclerView) view.findViewById(R.id.programRecyclerView);
         programRecyclerView.setHasFixedSize(true);
         //Setting list horizontal and what is in recycler view (HINT :‌ There is a vertical linear layout in recycler view and another horizontal linear layout in that linear layout) :((((
         programRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        //TODO:Delete this and connect to database
-        //Creating some temp lists to see the result
-        programTest = new MealdietProgram("2018-02-21",1);
-        MealdietProgram.MealdietProgramDay programDayTest = programTest.addOneDay(0);
 
-        programRowsList.add(
-                programDayTest.addOneRow(
-                        "yechizi",
-                        "Ziyad",
-                        "zood")
-        );
-        programRowsList.add(
-                programDayTest.addOneRow(
-                        "yechiziye dg",
-                        "Ziyade",
-                        "zoode")
-        );
-        programRowsList.add(
-                programDayTest.addOneRow(
-                        "pofak",
-                        "Ziyad",
-                        "harmoghe")
-        );
-        programRowsList.add(
-                programDayTest.addOneRow(
-                        "chips",
-                        "Ziyad",
-                        "dir")
-        );
+        //It is required but I don't know why?!
+        programRowsList = new ArrayList<>();
         //Choose program list adapter value and assign adapter to recycle view
         programListAdapter = new MealdietListAdapter(context,programRowsList);
-        programRecyclerView.setAdapter(programListAdapter);
-
-
-
-
-
-
-        programTest2 = new MealdietProgram("2018-02-20",1);
-        MealdietProgram.MealdietProgramDay programDayTest2 = programTest2.addOneDay(1);
-
-        programRowsList2 = new ArrayList<>();
-        programRowsList2.add(
-                programDayTest2.addOneRow(
-                        "pizza",
-                        "200g",
-                        "asr")
-        );
-        programRowsList2.add(
-                programDayTest2.addOneRow(
-                        "sandwich",
-                        "550g",
-                        "sob")
-        );
-        programRowsList2.add(
-                programDayTest2.addOneRow(
-                        "pofak",
-                        "Ziyad",
-                        "harmoghe")
-        );
-        programRowsList2.add(
-                programDayTest2.addOneRow(
-                        "burger",
-                        "1kg",
-                        "shab")
-        );
-        programRowsList2.add(
-                programDayTest2.addOneRow(
-                        "HI",
-                        "HUU",
-                        "HRWG")
-        );
-
-        //Choose program list adapter value and assign adapter to recycle view
-        programListAdapter2 = new MealdietListAdapter(context,programRowsList2);
-        programRecyclerView.setAdapter(programListAdapter);
-
-
-        Button testbutton = (Button) view.findViewById(R.id.changeList);
-        testbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                programRecyclerView.swapAdapter(programListAdapter2, false);
-            }
-        });
-
-
 
 
         //CREATING DIVIDERS
@@ -221,18 +154,7 @@ public class MealdietProgramFragment extends Fragment {
         return view;
     }
 
-    //On start is not necessary but for event handling by Event Bus you need to register them here.
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
 
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -279,32 +201,139 @@ public class MealdietProgramFragment extends Fragment {
 
     //Update the list
     private void updateProgramList() {
-        //getting array list
         //TODO:Here
-        /**
-        MealdietProgram.getMealDietPrograms(context, new ServerCallBack() {
-            @Override
-            public void onSucceed(JSONObject response) {
-                programsArr = programListParser(response);
-                //for (MealdietProgram program = programsArr.iterator(); )
-            }
-        });
-         **/
+        MealdietProgram.getMealDietPrograms(context);
+
     }
 
     /**
      *  From now Event bus event handlers Start
      */
 
+
     //Parsing response from get programs when getting event program get succeed!
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void onProgramGetSucceed(ArrayList<MealdietProgram> programsArr) {
-        //TODO: Add them on top to select
+    public void onProgramGetSucceed(MealdietProgramList programsArr) {
         //Foreach
-        for (MealdietProgram mealProgram: programsArr) {
+        //Passing program list to main program list
+        this.programsArr = programsArr.arrList;
+        //Do something after program call is finished something like finish call back
+
+        for (MealdietProgram mealProgram: programsArr.arrList) {
             mealProgram.getMealDietDays(context);
         }
+//        for (MealdietProgram mealProgram: programsArr.arrList) {
+//            Log.d("Meal_Diet",mealProgram.getProgramDay(1).getProgramRow(1).getFoodName());
+//        }
+
+    }
+
+    //Parsing response from get programs when getting event program get succeed!
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onProgramDaysGetSucceed(DietDaysList dietDaysArr) {
+        //TODO: Add them on top to select
+        //Foreach
+        //Do something after one diet day is finished something like finish call back
+        for (MealdietProgram.MealdietProgramDay dietDay: dietDaysArr.arrList) {
+            //IF that not worked.
+//                dietDay.addThisToParentList();
+                dietDay.getMealDietRows(context);
+        }
+
+    }
+
+    //Parsing response from get programs when getting event program get succeed!
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onProgramRowsGetSucceed(DietDayRowsList dietDayRowsArr) {
+        //TODO: Add them on top to select
+        //Foreach
+        //Do something for each row and find last row
+        for (MealdietProgram.MealdietProgramDay.MealdietProgramRow dietRow: dietDayRowsArr.arrList) {
+            //TODO: What to do for each row
+
+            if(dietRow.isLastRow() && dietRow.isLastDay() && dietRow.isLastProgram()){
+                onGettingListFinished();
+            }
+
+        }
+
+
+    }
+
+    //Called when all getting list is already finished.
+    private void onGettingListFinished(){
+        refreshList(1,1);
+    }
+
+    //Called when you want to refresh list (Maybe not getting the list again from server)
+    private void refreshList(int programID,int dayNumber){
+        MealdietProgram chosenDiet;
+        MealdietProgram.MealdietProgramDay chosenDay;
+        //Getting program from program list
+
+        chosenDiet = findDietProgramInAList(programID);
+        if(chosenDiet==null) {
+            return;
+        }
+        //Getting day from days list
+        chosenDay = chosenDiet.getProgramDay(dayNumber);
+        if(chosenDay==null){
+            return;
+        }
+
+        ArrayList<MealdietProgram.MealdietProgramDay.MealdietProgramRow> rowsInChosenDay = chosenDay.getProgramRows();
+
+
+        //FINALLY SHOW THE FUCKING LIST
+        programListAdapter = new MealdietListAdapter(context,rowsInChosenDay);
+        programRecyclerView.setAdapter(programListAdapter);
+        programListAdapter.notifyDataSetChanged();
+//        Toolbar toolbar = (Toolbar) getActivity().too
+//        menu.add(0, 0, 0, "Option1").setShortcut('3', 'c');
+        //programRecyclerView.swapAdapter(programListAdapter2, false);
+    }
+
+    private MealdietProgram findDietProgramInAList(int programID){
+
+        for(MealdietProgram mealdietProgram : this.programsArr){
+            if(mealdietProgram.getProgramID()== programID){
+                return mealdietProgram;
+            }
+        }
+        return null;
+
     }
 
 
+    //On start is not necessary but for event handling by Event Bus you need to register them here.
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(
+            Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.program_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_program1:
+                // do s.th.
+                Log.d("Action_Setting", "Yesss");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

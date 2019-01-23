@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_program1"
+        android:orderInCategory="100"
+        android:title="program_one"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_program2"
+        android:orderInCategory="100"
+        android:title="program_two"
+        app:showAsAction="never" />
+</menu>

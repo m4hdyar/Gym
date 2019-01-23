@@ -9,6 +9,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.m4hdyar.gym.lists.DietDayRowsList;
+import com.example.m4hdyar.gym.lists.DietDaysList;
+import com.example.m4hdyar.gym.lists.MealdietProgramList;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
@@ -26,19 +29,30 @@ public class MealdietProgram {
     //TODO:Change it to date
     private String submitDate;
     private int programID;
+    //Is last program to do something after that probably with eventbus
+    private boolean isLastProgram;
     //List of days each program have
     private ArrayList<MealdietProgramDay> programDays;
 
     public class MealdietProgramDay {
         private int dayNumber;
         private int dayID;
+        //Is last day in a program to do something after that probably with eventbus
+        private boolean isLastDay;
         //List of rows in each program
         private ArrayList<MealdietProgramRow> programRows;
+
+        public void addThisToParentList() {
+            MealdietProgram.this.programDays.add(this);
+        }
+
         //Each row of Meal Diet Program
         public class MealdietProgramRow {
             private String foodName;
             private String mealAmount, mealTime,rowNumber;
 
+            //Is last row in a day to do something after that probably with eventbus
+            private boolean isLastRow;
 //            private class PrescribedFood {
 //
 //            }
@@ -48,6 +62,7 @@ public class MealdietProgram {
                 this.mealAmount = mealAmount;
                 this.mealTime = mealTime;
                 this.rowNumber = rowNumber;
+                this.isLastRow=false;
             }
 
             public String getFoodName() {
@@ -62,12 +77,45 @@ public class MealdietProgram {
                 return mealTime;
             }
 
+
+
+            public boolean isLastProgram() {
+                return MealdietProgram.this.isLastProgram();
+            }
+            public boolean isLastDay() {
+                return MealdietProgramDay.this.isLastDay();
+            }
+            public boolean isLastRow() {
+                return isLastRow;
+            }
+
+            public void setLastRow(boolean lastRow) {
+                isLastRow = lastRow;
+            }
         }
 
         //Day Constructor
         public MealdietProgramDay(int dayNumber,int dayID) {
             this.dayNumber = dayNumber;
+            this.dayID = dayID;
             this.programRows = new ArrayList<>();
+            this.isLastDay = false;
+        }
+
+        public boolean isLastDay() {
+            return isLastDay;
+        }
+
+        public void setLastDay(boolean lastDay) {
+            isLastDay = lastDay;
+        }
+
+        public int getDayID() {
+            return dayID;
+        }
+
+        public int getDayNumber() {
+            return dayNumber;
         }
 
         //TODO:PRESCRIBED FOOD
@@ -80,13 +128,16 @@ public class MealdietProgram {
 
         }
 
+        public ArrayList<MealdietProgramRow> getProgramRows() {
+            return programRows;
+        }
 
         //Get specific program day from program
         public MealdietProgramRow getProgramRow(int rowNumber){
             return this.programRows.get(rowNumber);
         }
 
-        public ArrayList<MealdietProgramRow> getMealDietRows(Context context){
+        public void getMealDietRows(Context context){
             //TODO: Get token from login page
             String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
@@ -111,6 +162,7 @@ public class MealdietProgram {
                         //TODO:Other error codes need to be checked
                         try {
                             if(response.getInt("Error_Code")==200){
+
                                 //This time for getting meal diet days
                                 JSONArray rowsArr = response.getJSONArray("Meal_Diets");
                                 for(int i = 0; i < rowsArr.length();i++){
@@ -120,9 +172,21 @@ public class MealdietProgram {
                                     String thisRowMealTime=rowJson.getString("Meal_Time");
                                     String thisRowAmount=rowJson.getString("Amount");
                                     String thisRowName=rowJson.getString("Name");
-                                    mealdietRowsArrayList.add(new MealdietProgramRow(thisRowName,thisRowAmount,thisRowMealTime,thisRowNumber));
+
+
+                                    MealdietProgramRow newMealdietProgramRow = new MealdietProgramRow(thisRowName,thisRowAmount,thisRowMealTime,thisRowNumber);
+                                    //Setting if this program is last program
+                                    if(i==rowsArr.length()-1) {
+                                        newMealdietProgramRow.setLastRow(true);
+                                    }
+                                    mealdietRowsArrayList.add(newMealdietProgramRow);
+
                                 }
-                                EventBus.getDefault().post(mealdietRowsArrayList);
+                                //Changing array list to an object to send it with event bus
+                                DietDayRowsList dietDayRowsList = new DietDayRowsList(mealdietRowsArrayList);
+                                //Adding this to Day class list so it always know his children :))
+                                MealdietProgramDay.this.programRows=mealdietRowsArrayList;
+                                EventBus.getDefault().post(dietDayRowsList);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -161,9 +225,6 @@ public class MealdietProgram {
             };
 
             queue.add(arrReq);
-
-
-            return mealdietRowsArrayList;
         }
 
     }
@@ -174,6 +235,7 @@ public class MealdietProgram {
         this.submitDate = submitDate;
         this.programID = programID;
         programDays = new ArrayList<>();
+        isLastProgram=false;
     }
 
     //Adding day to a program
@@ -186,7 +248,16 @@ public class MealdietProgram {
 
     //Get specific program day from program
     public MealdietProgramDay getProgramDay(int dayNumber){
-        return this.programDays.get(dayNumber);
+
+        for(MealdietProgramDay mealdietProgramDay : programDays){
+
+            if(mealdietProgramDay.getDayNumber()==dayNumber){
+                return mealdietProgramDay;
+            }
+
+        }
+        //Return null if not find
+        return null;
     }
 
     //Getting meal diet programs from server
@@ -221,9 +292,16 @@ public class MealdietProgram {
                                     String thisDietSubmitDate = programJson.getString("Submit_Date");
                                     //Converting diet id as integer to string
                                     int thisDietID = Integer.parseInt(programJson.getString("Meal_Diet_ID"));
-                                    mealdietProgramArrayList.add(new MealdietProgram(thisDietSubmitDate,thisDietID));
+                                    MealdietProgram newMealdietProgram = new MealdietProgram(thisDietSubmitDate,thisDietID);
+                                    //Setting if this program is last program
+                                    if(i == dietsArr.length()-1) {
+                                        newMealdietProgram.setLastProgram(true);
+                                    }
+                                    mealdietProgramArrayList.add(newMealdietProgram);
                                 }
-                                EventBus.getDefault().post(mealdietProgramArrayList);
+                                //Changing array list to an object to send it with event bus
+                                MealdietProgramList mealdietProgramList = new MealdietProgramList(mealdietProgramArrayList);
+                                EventBus.getDefault().post(mealdietProgramList);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -266,13 +344,10 @@ public class MealdietProgram {
         };
 
         queue.add(arrReq);
-
-
-        return;
     }
 
     //Getting one meal diet days from server
-    public ArrayList<MealdietProgramDay> getMealDietDays(Context context){
+    public void getMealDietDays(Context context){
         //TODO: Get token from login page
         String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
@@ -303,9 +378,19 @@ public class MealdietProgram {
                                 //Converting strings to int
                                 int thisDayNumber = Integer.parseInt(dayJson.getString("Day_Number"));
                                 int thisDayID = Integer.parseInt(dayJson.getString("Meal_Diet_Day_ID"));
-                                mealdietDaysArrayList.add(new MealdietProgramDay(thisDayNumber,thisDayID));
+                                MealdietProgramDay mealdietProgramDay = new MealdietProgramDay(thisDayNumber,thisDayID);
+                                //Setting if this program is last program
+                                if(i == daysArr.length()-1) {
+                                    mealdietProgramDay.setLastDay(true);
+                                }
+                                mealdietDaysArrayList.add(mealdietProgramDay);
                             }
-                            EventBus.getDefault().post(mealdietDaysArrayList);
+
+                            //Changing array list to an object to send it with event bus
+                            DietDaysList dietDaysList = new DietDaysList(mealdietDaysArrayList);
+                            //Adding this to Program class list so it always know his children :))
+                            MealdietProgram.this.programDays=mealdietDaysArrayList;
+                            EventBus.getDefault().post(dietDaysList);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -344,9 +429,6 @@ public class MealdietProgram {
         };
 
         queue.add(arrReq);
-
-
-        return mealdietDaysArrayList;
     }
 
     public String getSubmitDate() {
@@ -355,5 +437,13 @@ public class MealdietProgram {
 
     public int getProgramID() {
         return programID;
+    }
+
+    public boolean isLastProgram() {
+        return isLastProgram;
+    }
+
+    public void setLastProgram(boolean lastProgram) {
+        isLastProgram = lastProgram;
     }
 }
