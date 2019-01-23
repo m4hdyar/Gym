@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_account) {
             fragment = new ProfileFragment();
         } else if (id == R.id.nav_subscription_history) {
-
+            fragment = new SubscriptionHistoryFragment();
         } else if (id == R.id.nav_exit) {
          //TODO: Clear Server Token
 

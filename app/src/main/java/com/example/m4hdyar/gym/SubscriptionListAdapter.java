@@ -72,7 +72,7 @@ public class SubscriptionListAdapter  extends RecyclerView.Adapter<SubscriptionL
             //TODO: ID
             txtSubscriptionName = itemView.findViewById(R.id.txtSubscriptionName);
             txtSubscriptionDate = itemView.findViewById(R.id.txtSubscriptionDate);
-            txtSubsPaidAmount = itemView.findViewById(R.id.mealTime);
+            txtSubsPaidAmount = itemView.findViewById(R.id.txtSubsPaidAmount);
         }
     }
 }

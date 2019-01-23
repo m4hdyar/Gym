@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -59,26 +62,28 @@ public class SubscriptionHistoryFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSubscriptionGetComplete(JSONObject response) {
+
+        //TODO:Make an Order BY query
+
         try {
             //For each history we will create a subscription object
             JSONArray subsJsonArray = response.getJSONArray("Subscription_Histories");
             for (int i = 0; i < subsJsonArray.length(); i++) {
                 JSONObject subsJson = subsJsonArray.getJSONObject(i);
 
-                String name = subsJson.getString("name");
+                String name = subsJson.getString("Name");
                 String submitDate = subsJson.getString("Submit_Date");
                 String paidAmount = subsJson.getString("Paid_Amount");
-
                 //Adding new subscription to subscription list
                 subscriptionList.add(new Subscription(submitDate, paidAmount, name));
                 //Setting if this program is last program
             }
-        } catch (JSONException e){
-
             //FINALLY SHOW THE LIST
             subscriptionListAdapter = new SubscriptionListAdapter(context,subscriptionList);
             subscriptionRecyclerView.setAdapter(subscriptionListAdapter);
             subscriptionListAdapter.notifyDataSetChanged();
+        } catch (JSONException e){
+            e.printStackTrace();
         }
     }
 
@@ -137,7 +142,7 @@ public class SubscriptionHistoryFragment extends Fragment {
 
         subscriptionList = new ArrayList<>();
 
-        subscriptionRecyclerView = (RecyclerView) view.findViewById(R.id.programRecyclerView);
+        subscriptionRecyclerView = (RecyclerView) view.findViewById(R.id.subscriptionRecyclerView);
         subscriptionRecyclerView.setHasFixedSize(true);
         //Setting list horizontal and what is in recycler view (HINT :‌ There is a vertical linear layout in recycler view and another horizontal linear layout in that linear layout) :((((
         subscriptionRecyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -161,18 +166,19 @@ public class SubscriptionHistoryFragment extends Fragment {
     public void refreshList(Context context){
         RequestQueue queue = Volley.newRequestQueue(context);
         //declaring subscriptionList here to interact with it in Volley
-        final List<Subscription> subscriptionList = this.subscriptionList;
+
         String baseUrl="https://sayehparsaei.com/GymAPI/";
         String file="GetSubscriptionHistory";
         String uri = baseUrl + file;
-
         JsonObjectRequest objReq = new JsonObjectRequest(Request.Method.GET, uri, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
+
                 if (response.length() > 0) {
                     // The user does have repos, so let's loop through them all.
                     try {
                         if(response.getInt("Error_Code")==200) {
+
                             EventBus.getDefault().post(response);
                         }
                         //String lastUpdated = jsonObj.get("updated_at").toString();
@@ -188,7 +194,16 @@ public class SubscriptionHistoryFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
 
             }
-        });
+        })
+            //Passing tokens
+        {
+            @Override
+            public Map<String, String> getHeaders() {
+                HashMap<String, String> headers = new HashMap<String, String>();
+                headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
+                return headers;
+            }
+        };
 
         queue.add(objReq);
     }
@@ -201,16 +216,16 @@ public class SubscriptionHistoryFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
     @Override
     public void onDetach() {
