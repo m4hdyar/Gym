@@ -45,7 +45,6 @@ public class ProfileActivity extends AppCompatActivity {
                             // For each repo, add a new line to our repo list.
                             JSONObject jsonObj = response.getJSONObject(i);
                             String errorCode = jsonObj.get("Error_Code").toString();
-                            System.out.println(errorCode + "HIIIIIII");
                             //String lastUpdated = jsonObj.get("updated_at").toString();
                             //addToRepoList(repoName, lastUpdated);
                         } catch (JSONException e) {

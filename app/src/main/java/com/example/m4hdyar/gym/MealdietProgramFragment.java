@@ -254,10 +254,7 @@ public class MealdietProgramFragment extends Fragment {
             if(dietRow.isLastRow() && dietRow.isLastDay() && dietRow.isLastProgram()){
                 onGettingListFinished();
             }
-
         }
-
-
     }
 
     //Called when all getting list is already finished.
@@ -284,7 +281,7 @@ public class MealdietProgramFragment extends Fragment {
         ArrayList<MealdietProgram.MealdietProgramDay.MealdietProgramRow> rowsInChosenDay = chosenDay.getProgramRows();
 
 
-        //FINALLY SHOW THE FUCKING LIST
+        //FINALLY SHOW THE LIST
         programListAdapter = new MealdietListAdapter(context,rowsInChosenDay);
         programRecyclerView.setAdapter(programListAdapter);
         programListAdapter.notifyDataSetChanged();
