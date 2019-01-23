@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +20,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.DataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -58,6 +62,7 @@ public class BodyStateFragment extends Fragment implements AdapterView.OnItemSel
     Spinner spinner;
     BarChart barChart;
     String onShow;
+    String label;
 
 //Create eventBus for this fragment(need to have Subscribes)
     @Override
@@ -226,7 +231,27 @@ public class BodyStateFragment extends Fragment implements AdapterView.OnItemSel
         for(int i=0; i<BodyStateList.dataBodyStatesList.size();i++) {
             barEntries.add(new BarEntry(BodyStateList.dataBodyStatesList.get(i).getDataListId(), BodyStateList.dataBodyStatesList.get(i).getDataList()));
         }
-        BarDataSet barDataSet = new BarDataSet(barEntries,"Data");
+
+        for(int i=0; i<BodyStateList.dataBodyStatesList.size();i++){
+            Log.e("Barchart",String.valueOf( BodyStateList.dataBodyStatesList.get(i).getDataList()));
+        }
+        //TODO::set Date in XAxis
+
+//        final ArrayList<String> xLabel = new ArrayList<>();
+//        for(int i=0; i<BodyStateList.dataBodyStatesList.size();i++) {
+//            xLabel.add(BodyStateList.dataBodyStatesList.get(i).getSubmitDate());
+//        }
+//
+//        XAxis xAxis = barChart.getXAxis();
+//        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setDrawGridLines(false);
+//        xAxis.setValueFormatter(new IAxisValueFormatter() {
+//            @Override
+//            public String getFormattedValue(float value, AxisBase axis) {
+//                return xLabel.get((int)value);
+//            }
+//        });
+        BarDataSet barDataSet = new BarDataSet(barEntries,label);
 
         BarData barData = new BarData (barDataSet);
 
@@ -235,6 +260,13 @@ public class BodyStateFragment extends Fragment implements AdapterView.OnItemSel
         barChart.setTouchEnabled(true);
         barChart.setDragEnabled(true);
         barChart.setScaleEnabled(true);
+
+        TypedValue typedValue = new TypedValue();
+        getActivity().getTheme().resolveAttribute(R.attr.colorPrimary,typedValue,true);
+        int color = typedValue.data;
+        barChart.setBorderColor(color);
+        String noFilled = new String("چارتی انتخاب نشده است");
+        barChart.setNoDataText(noFilled);
 
         barDataSet.notifyDataSetChanged();
         barData.notifyDataChanged();
@@ -257,31 +289,35 @@ public class BodyStateFragment extends Fragment implements AdapterView.OnItemSel
 
                 String submitDate = profileContent.getString("Submit_Date");
                 float value = 0;
+
                 switch (onShow) {
                     case "Fat":
                         value = Float.valueOf(profileContent.getString("Fat"));
+                        label="چربی";
                         break;
                     case "Arm_Around":
                         value = Float.valueOf(profileContent.getString("Arm_Around"));
+                        label="دور بازو";
                         break;
                     case "Belly_Size":
                         value = Float.valueOf(profileContent.getString("Belly_Size"));
+                        label="دور شکم";
                         break;
                     case "Thigh_Size":
                         value = Float.valueOf(profileContent.getString("Thigh_Size"));
+                        label="دور پا";
                         break;
                     case "Weight":
                         value = Float.valueOf(profileContent.getString("Weight"));
+                        label="وزن";
                         break;
                         default:
                             break;
                 }
-
-
-
                 //add data to list
                 dataBodyStatesList.add(new BodyStateList.DataBodyState(submitDate,value,i));
             }
+            Log.e("response",String.valueOf(BodyStateList.dataBodyStatesList.get(1).getDataList()));
             fillBar();
         }catch (JSONException e){
             e.printStackTrace();
@@ -304,6 +340,7 @@ public class BodyStateFragment extends Fragment implements AdapterView.OnItemSel
             public void onResponse(JSONObject response) {
                 if (response.length() > 0) {
                     try {
+
                         if (response.getInt("Error_Code")==200){
                             EventBus.getDefault().post(response);
                         }
