@@ -13,7 +13,7 @@ public class LoginActivity extends AppCompatActivity {
 
     EditText UserTxt ;
     EditText PassTxt ;
-    Button LoginBt ;
+    Button LoginBtn ;
 
 
     @Override
@@ -21,12 +21,17 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        UserTxt = (EditText) findViewById(R.id.editTextUserName);
-        PassTxt = (EditText) findViewById(R.id.editTextPass);
-        LoginBt = (Button) findViewById(R.id.buttonLogin);
+        if (SharedPrefManager.getInstance(this).isLoggedIn()) {
+            finish();
+            startActivity(new Intent(this, MainActivity.class));
+        }
+
+        UserTxt = (EditText) findViewById(R.id.editTextTel);
+        PassTxt = (EditText) findViewById(R.id.editTextLockerCode);
+        LoginBtn = (Button) findViewById(R.id.buttonLogin);
 
 
-        LoginBt.setOnClickListener(new View.OnClickListener() {
+        LoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();

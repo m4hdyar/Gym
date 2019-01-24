@@ -25,9 +25,9 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:labelFor="@+id/textViewUsername"
-        app:layout_constraintBottom_toTopOf="@+id/editTextPass"
-        app:layout_constraintEnd_toEndOf="@+id/editTextPass"
-        app:layout_constraintStart_toStartOf="@+id/editTextPass"
+        app:layout_constraintBottom_toTopOf="@+id/editTextLockerCode"
+        app:layout_constraintEnd_toEndOf="@+id/editTextLockerCode"
+        app:layout_constraintStart_toStartOf="@+id/editTextLockerCode"
         app:layout_constraintTop_toBottomOf="@+id/imageViewLogin"
         android:importantForAutofill="no" />
 
@@ -41,7 +41,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editTextPass"
+        android:id="@+id/editTextLockerCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/password"
-        app:layout_constraintBaseline_toBaselineOf="@+id/editTextPass"
+        app:layout_constraintBaseline_toBaselineOf="@+id/editTextLockerCode"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -72,6 +72,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextPass" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextLockerCode" />
 
 </android.support.constraint.ConstraintLayout>
