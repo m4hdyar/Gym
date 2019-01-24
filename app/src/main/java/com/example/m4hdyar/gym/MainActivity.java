@@ -111,15 +111,12 @@ public class MainActivity extends AppCompatActivity
             fragment = new MealdietProgramFragment();
         } else if (id == R.id.nav_body_state) {
             fragment = new BodyStateFragment();
-        } else if (id == R.id.nav_private_sport_game) {
-            fragment = new PrivatProgramSportFragment();
         } else if (id == R.id.nav_account) {
             fragment = new ProfileFragment();
         } else if (id == R.id.nav_subscription_history) {
             fragment = new SubscriptionHistoryFragment();
         } else if (id == R.id.nav_exit) {
-         //TODO: Clear Server Token
-
+            SharedPrefManager.getInstance(getApplicationContext()).logout(this);
 
         }
         if (fragment != null) {
