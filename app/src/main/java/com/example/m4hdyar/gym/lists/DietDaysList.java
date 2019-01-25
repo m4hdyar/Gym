@@ -7,7 +7,11 @@ import java.util.ArrayList;
 public class DietDaysList
 {
     public ArrayList<MealdietProgram.MealdietProgramDay> arrList;
-    public DietDaysList(ArrayList<MealdietProgram.MealdietProgramDay> data) {
+    public MealdietProgramList parentList;
+    public int volleyI;
+    public DietDaysList(ArrayList<MealdietProgram.MealdietProgramDay> data,MealdietProgramList parentData) {
+        volleyI = 0;
         arrList = data;
+        parentList = parentData;
     }
 }

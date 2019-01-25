@@ -9,7 +9,10 @@ public class MealdietProgramList
 {
     //Is it last item for queue and do something after that in event bus
     public ArrayList<MealdietProgram> arrList;
+    public int volleyI; // Index of requests
     public MealdietProgramList(ArrayList<MealdietProgram> data) {
+        volleyI=0;
         arrList = data;
     }
+
 }

@@ -137,9 +137,7 @@ public class MealdietProgram {
             return this.programRows.get(rowNumber);
         }
 
-        public void getMealDietRows(Context context){
-            //TODO: Get token from login page
-            String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
+        public void getMealDietRows(Context context, final DietDaysList parentList){
 
             RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -162,7 +160,7 @@ public class MealdietProgram {
                         //TODO:Other error codes need to be checked
                         try {
                             if(response.getInt("Error_Code")==200){
-
+                                Log.d("Volley",response.toString());
                                 //This time for getting meal diet days
                                 JSONArray rowsArr = response.getJSONArray("Meal_Diets");
                                 for(int i = 0; i < rowsArr.length();i++){
@@ -183,7 +181,7 @@ public class MealdietProgram {
 
                                 }
                                 //Changing array list to an object to send it with event bus
-                                DietDayRowsList dietDayRowsList = new DietDayRowsList(mealdietRowsArrayList);
+                                DietDayRowsList dietDayRowsList = new DietDayRowsList(mealdietRowsArrayList,parentList);
                                 //Adding this to Day class list so it always know his children :))
                                 MealdietProgramDay.this.programRows=mealdietRowsArrayList;
                                 EventBus.getDefault().post(dietDayRowsList);
@@ -203,7 +201,7 @@ public class MealdietProgram {
 //                        e.printStackTrace();
 //                    }
 
-                        Log.d("Volley",response.toString());
+
 
                     }
 
@@ -219,12 +217,15 @@ public class MealdietProgram {
                 @Override
                 public Map<String, String> getHeaders() {
                     HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
+                    headers.put("TOKEN_VALUE", User.token);
                     return headers;
                 }
             };
-
+//TODO:Here
             queue.add(arrReq);
+//            RequestQueue serialRequestQueue = SerialRequestQueue.getSerialRequestQueue(context);
+//            serialRequestQueue.start();
+//            serialRequestQueue.add(arrReq);
         }
 
     }
@@ -262,8 +263,6 @@ public class MealdietProgram {
 
     //Getting meal diet programs from server
     public static void getMealDietPrograms(Context context){
-        //TODO: Get token from login page
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -338,7 +337,7 @@ public class MealdietProgram {
             @Override
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
+                headers.put("TOKEN_VALUE", User.token);
                 return headers;
             }
         };
@@ -347,10 +346,7 @@ public class MealdietProgram {
     }
 
     //Getting one meal diet days from server
-    public void getMealDietDays(Context context){
-        //TODO: Get token from login page
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
-
+    public void getMealDietDays(Context context, final MealdietProgramList parentList){
         RequestQueue queue = Volley.newRequestQueue(context);
 
         final String baseUrl = "https://sayehparsaei.com/GymAPI/";
@@ -387,7 +383,7 @@ public class MealdietProgram {
                             }
 
                             //Changing array list to an object to send it with event bus
-                            DietDaysList dietDaysList = new DietDaysList(mealdietDaysArrayList);
+                            DietDaysList dietDaysList = new DietDaysList(mealdietDaysArrayList,parentList);
                             //Adding this to Program class list so it always know his children :))
                             MealdietProgram.this.programDays=mealdietDaysArrayList;
                             EventBus.getDefault().post(dietDaysList);
@@ -423,7 +419,7 @@ public class MealdietProgram {
             @Override
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
+                headers.put("TOKEN_VALUE", User.token);
                 return headers;
             }
         };
@@ -445,5 +441,9 @@ public class MealdietProgram {
 
     public void setLastProgram(boolean lastProgram) {
         isLastProgram = lastProgram;
+    }
+
+    public ArrayList<MealdietProgramDay> getProgramDaysList() {
+        return programDays;
     }
 }
