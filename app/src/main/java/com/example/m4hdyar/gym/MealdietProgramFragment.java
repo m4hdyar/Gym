@@ -1,8 +1,6 @@
 package com.example.m4hdyar.gym;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,15 +9,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.m4hdyar.gym.lists.DietDayRowsList;
 import com.example.m4hdyar.gym.lists.DietDaysList;
@@ -28,9 +25,6 @@ import com.example.m4hdyar.gym.lists.MealdietProgramList;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,14 +50,24 @@ public class MealdietProgramFragment extends Fragment {
     //Create context
     Context context;
 
-    //Menu menu;
+    //Spinners
+    Spinner dietProgramSpinner;
+    Spinner dietDaySpinner;
+    //Prefix before spinner
+    String programSpinnerPrefix;
+    String daySpinnerPrefix;
+
+
+    //Saving current program and day
+    int currentProgram,currentDay;
+
 
     private OnFragmentInteractionListener mListener;
 
     //Defining Program RecyclerView and Adapter
     RecyclerView programRecyclerView;
     MealdietListAdapter programListAdapter;
-
+    MealdietListAdapter programListAdapter2;
     List<MealdietProgram.MealdietProgramDay.MealdietProgramRow> programRowsList;
 
     ArrayList<MealdietProgram> programsArr;
@@ -113,13 +117,19 @@ public class MealdietProgramFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mealdiet_program, container, false);
         context = getActivity();
 
+        programSpinnerPrefix = getString(R.string.diet_spinner_prefix);
+        daySpinnerPrefix = getString(R.string.day_spinner_prefix);
+        //Current program on start is always 1 and day also 1
+        currentDay=1;
+        currentProgram=1;
+
         //Creating a list that gets Program lists
         programsArr = new ArrayList<>();
 
-        //Update List
-        updateProgramList();
-//        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-//        toolbar.setBackground(new ColorDrawable(Color.RED));
+        //Find spinner view
+        dietProgramSpinner = (Spinner) view.findViewById(R.id.dietSpinner);
+        dietDaySpinner = (Spinner) view.findViewById(R.id.dietDaySpinner);
+
 
         programRecyclerView = (RecyclerView) view.findViewById(R.id.programRecyclerView);
         programRecyclerView.setHasFixedSize(true);
@@ -127,11 +137,68 @@ public class MealdietProgramFragment extends Fragment {
         programRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
 
-        //It is required but I don't know why?!
+        //It is required but I don't know why?! (Now I know why :))
+        //You need to assign adapter to recyclerview as soon as activity starts
         programRowsList = new ArrayList<>();
         //Choose program list adapter value and assign adapter to recycle view
         programListAdapter = new MealdietListAdapter(context,programRowsList);
+        programRecyclerView.setAdapter(programListAdapter);
 
+        //Update List
+        updateProgramList();
+//        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+//        toolbar.setBackground(new ColorDrawable(Color.RED));
+
+
+        //What happens when an item in spinner is selected
+        dietProgramSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Notify the selected item text
+                String selectedItemText = (String) parent.getItemAtPosition(position);
+                //Getting resource prefix size dynamically so you can change it
+                final int prefixSize=programSpinnerPrefix.length();
+                //Deleting prefix from item
+
+                selectedItemText = selectedItemText.substring(prefixSize);
+                //Getting integer value from text
+                int selectedProgramNumber= Integer.parseInt(selectedItemText.trim());
+
+                //Refresh the list with day 1 of program chosen
+                currentProgram=selectedProgramNumber;
+                refreshList(selectedProgramNumber,1);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //What happens when an item in spinner day is selected
+        dietDaySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                // Notify the selected item text
+                String selectedItemText = (String) parent.getItemAtPosition(position);
+                //Getting resource prefix size dynamically so you can change it
+                final int prefixSize=daySpinnerPrefix.length();
+                //Deleting prefix from item
+                selectedItemText = selectedItemText.substring(prefixSize);
+                //Getting integer value from text
+                int selectedDayNumber= Integer.parseInt(selectedItemText.trim());
+
+                //Refresh the list with day 1 of program chosen
+                refreshList(currentProgram,selectedDayNumber);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         //CREATING DIVIDERS
         //programRecyclerView.addItemDecoration(new RecyclerListDivider(this));
@@ -217,14 +284,25 @@ public class MealdietProgramFragment extends Fragment {
         //Foreach
         //Passing program list to main program list
         this.programsArr = programsArr.arrList;
-        //Do something after program call is finished something like finish call back
 
-        for (MealdietProgram mealProgram: programsArr.arrList) {
-            mealProgram.getMealDietDays(context);
+        //Need to chain volley requests so requests go serial and not parallel.
+        programsArr.volleyI+=1;
+
+        //Check if there is another program that we didn't get it's days(Also rows).
+        if(programsArr.volleyI<=this.programsArr.size()){
+
+            this.programsArr.get(programsArr.volleyI-1).getMealDietDays(context,programsArr);
+        }else{
+            //After all program is finished go to event and Do something after program call is finished something like finish call back
+            onGettingListFinished();
         }
+
+
+        //Oldie and not so goldie , It goes faster but maybe you get last row earlier than first rows so you have an error
 //        for (MealdietProgram mealProgram: programsArr.arrList) {
-//            Log.d("Meal_Diet",mealProgram.getProgramDay(1).getProgramRow(1).getFoodName());
+//            mealProgram.getMealDietDays(context);
 //        }
+
 
     }
 
@@ -233,12 +311,21 @@ public class MealdietProgramFragment extends Fragment {
     public void onProgramDaysGetSucceed(DietDaysList dietDaysArr) {
         //TODO: Add them on top to select
         //Foreach
-        //Do something after one diet day is finished something like finish call back
-        for (MealdietProgram.MealdietProgramDay dietDay: dietDaysArr.arrList) {
-            //IF that not worked.
-//                dietDay.addThisToParentList();
-                dietDay.getMealDietRows(context);
+        //Need to chain volley requests so requests go serial and not parallel.
+        dietDaysArr.volleyI+=1;
+        //Check if there is another day that we didn't get it's rows.
+        if(dietDaysArr.volleyI<=dietDaysArr.arrList.size()){
+            dietDaysArr.arrList.get(dietDaysArr.volleyI-1).getMealDietRows(context,dietDaysArr);
+        }else{
+            //If days in this program is finished let's go to parent program list to continue with another program
+            EventBus.getDefault().post(dietDaysArr.parentList);
         }
+        //Do something after one diet day is finished something like finish call back
+//        for (MealdietProgram.MealdietProgramDay dietDay: dietDaysArr.arrList) {
+//            //IF that not worked.
+////                dietDay.addThisToParentList();
+//                dietDay.getMealDietRows(context);
+//        }
 
     }
 
@@ -247,19 +334,62 @@ public class MealdietProgramFragment extends Fragment {
     public void onProgramRowsGetSucceed(DietDayRowsList dietDayRowsArr) {
         //TODO: Add them on top to select
         //Foreach
-        //Do something for each row and find last row
-        for (MealdietProgram.MealdietProgramDay.MealdietProgramRow dietRow: dietDayRowsArr.arrList) {
-            //TODO: What to do for each row
 
-            if(dietRow.isLastRow() && dietRow.isLastDay() && dietRow.isLastProgram()){
-                onGettingListFinished();
-            }
-        }
+        //When getting rows finished let's go to parent program to continue with another day
+        EventBus.getDefault().post(dietDayRowsArr.parentList);
+
+//         if you want to do something for each rows uncomment this and create another volleyI in rows list
+//        if(dietDayRowsArr.volleyI<=dietDayRowsArr.arrList.size()){
+////            dietDayRowsArr.arrList.get(dietDayRowsArr.volleyI-1).getMealDietRows(context);
+//        }else{
+//
+//        }
+
+        //Do something for each row and find last row
+//        for (MealdietProgram.MealdietProgramDay.MealdietProgramRow dietRow: dietDayRowsArr.arrList) {
+//            //TODO: What to do for each row
+//
+//            if(dietRow.isLastRow() && dietRow.isLastDay() && dietRow.isLastProgram()){
+//                onGettingListFinished();
+//            }
+//        }
     }
 
     //Called when all getting list is already finished.
     private void onGettingListFinished(){
-        refreshList(1,1);
+
+        refreshList(currentProgram,currentDay);
+
+        //Adding programs to spinner list
+        List<String> programSpinnerArr =  new ArrayList<String>();
+        for(MealdietProgram program : programsArr){
+
+            programSpinnerArr.add(programSpinnerPrefix + String.valueOf(program.getProgramID()));
+        }
+
+        ArrayAdapter<String> programAdapter = new ArrayAdapter<String>(
+                context, android.R.layout.simple_spinner_dropdown_item, programSpinnerArr);
+
+        programAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dietProgramSpinner.setAdapter(programAdapter);
+
+        //Adding days to spinner list
+        MealdietProgram thisProgram = findDietProgramInAList(currentProgram);
+        List<String> daySpinnerArr =  new ArrayList<String>();
+
+        assert thisProgram != null;
+        for(MealdietProgram.MealdietProgramDay thisProgramDay : thisProgram.getProgramDaysList()){
+            daySpinnerArr.add(daySpinnerPrefix + String.valueOf(thisProgramDay.getDayNumber()));
+        }
+
+        ArrayAdapter<String> dayAdapter = new ArrayAdapter<String>(
+                context, android.R.layout.simple_spinner_dropdown_item, daySpinnerArr);
+
+        dayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dietDaySpinner.setAdapter(dayAdapter);
+
+//        System.out.println("Nooo");
+//        ((MainActivity) getActivity()).setActionBarDiets();
     }
 
     //Called when you want to refresh list (Maybe not getting the list again from server)
@@ -279,12 +409,15 @@ public class MealdietProgramFragment extends Fragment {
         }
 
         ArrayList<MealdietProgram.MealdietProgramDay.MealdietProgramRow> rowsInChosenDay = chosenDay.getProgramRows();
-
+        programRowsList = new ArrayList<>();
+        programRowsList.addAll(rowsInChosenDay);
 
         //FINALLY SHOW THE LIST
-        programListAdapter = new MealdietListAdapter(context,rowsInChosenDay);
-        programRecyclerView.setAdapter(programListAdapter);
-        programListAdapter.notifyDataSetChanged();
+        //programListAdapter = new MealdietListAdapter(context,programRowsList);
+        //TODO : SOMETIMES return 0
+        Log.e("Adapter", String.valueOf(programRowsList.size()));
+        Log.e("Adapter",programRowsList.get(1).getFoodName());
+        programListAdapter.updateReceiptsList(programRowsList);
 //        Toolbar toolbar = (Toolbar) getActivity().too
 //        menu.add(0, 0, 0, "Option1").setShortcut('3', 'c');
         //programRecyclerView.swapAdapter(programListAdapter2, false);
@@ -315,22 +448,22 @@ public class MealdietProgramFragment extends Fragment {
         super.onStop();
     }
 
-    @Override
-    public void onCreateOptionsMenu(
-            Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.program_menu, menu);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(
+//            Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.program_menu, menu);
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_program1:
-                // do s.th.
-                Log.d("Action_Setting", "Yesss");
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // handle item selection
+//        switch (item.getItemId()) {
+//            case R.id.action_program1:
+//                // do s.th.
+//                Log.d("Action_Setting", "Yesss");
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 }
