@@ -138,8 +138,6 @@ public class MealdietProgram {
         }
 
         public void getMealDietRows(Context context, final DietDaysList parentList){
-            //TODO: Get token from login page
-            String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
             RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -219,7 +217,7 @@ public class MealdietProgram {
                 @Override
                 public Map<String, String> getHeaders() {
                     HashMap<String, String> headers = new HashMap<String, String>();
-                    headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
+                    headers.put("TOKEN_VALUE", User.token);
                     return headers;
                 }
             };
@@ -265,8 +263,6 @@ public class MealdietProgram {
 
     //Getting meal diet programs from server
     public static void getMealDietPrograms(Context context){
-        //TODO: Get token from login page
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
 
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -341,7 +337,7 @@ public class MealdietProgram {
             @Override
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
+                headers.put("TOKEN_VALUE", User.token);
                 return headers;
             }
         };
@@ -351,9 +347,6 @@ public class MealdietProgram {
 
     //Getting one meal diet days from server
     public void getMealDietDays(Context context, final MealdietProgramList parentList){
-        //TODO: Get token from login page
-        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8";
-
         RequestQueue queue = Volley.newRequestQueue(context);
 
         final String baseUrl = "https://sayehparsaei.com/GymAPI/";
@@ -426,7 +419,7 @@ public class MealdietProgram {
             @Override
             public Map<String, String> getHeaders() {
                 HashMap<String, String> headers = new HashMap<String, String>();
-                headers.put("TOKEN_VALUE", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSIsImV4cCI6MTU0OTM1NDA0OSwiaXNzIjoibG9jYWxob3N0IiwiaWF0IjoxNTQ4MDU4MDQ5fQ.3SdO6mUfur51-mfoKq_psdPoMJGYE9BB5M-cbb9bvx8");
+                headers.put("TOKEN_VALUE", User.token);
                 return headers;
             }
         };
