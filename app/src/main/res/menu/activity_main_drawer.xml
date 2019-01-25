@@ -19,10 +19,6 @@
             android:icon="@drawable/ic_accessibility_black_24dp"
             android:title="وضعیت بدن" />
         <item
-            android:id="@+id/nav_private_sport_game"
-            android:icon="@drawable/ic_flash_on_black_24dp"
-            android:title="برنامه خصوصی ورزشی" />
-        <item
             android:id="@+id/nav_account"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="پروفایل کاربری" />

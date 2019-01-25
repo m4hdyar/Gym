@@ -1,5 +1,6 @@
 package com.example.m4hdyar.gym;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,7 +38,7 @@ public class SharedPrefManager {
     public void userLogin(User user) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(KEY_ID, user.getAthleteId());
+        editor.putString(KEY_ID, user.getAthleteId());
         editor.putString(KEY_NAME, user.getAthleteName());
         editor.putString(KEY_FAMILY, user.getAthleteFamily());
         editor.putString(KEY_SUBSCRIPTION_NAME, user.getSubscriptionName());
@@ -48,6 +49,7 @@ public class SharedPrefManager {
     //this method will checker whether user is already logged in or not
     public boolean isLoggedIn() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+        getUser();
         return sharedPreferences.getString(KEY_NAME, null) != null;
     }
 
@@ -55,7 +57,7 @@ public class SharedPrefManager {
     public User getUser() {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return new User(
-                sharedPreferences.getInt(KEY_ID, -1),
+                sharedPreferences.getString(KEY_ID, null),
                 sharedPreferences.getString(KEY_NAME, null),
                 sharedPreferences.getString(KEY_FAMILY, null),
                 sharedPreferences.getString(KEY_SUBSCRIPTION_NAME, null),
@@ -64,16 +66,28 @@ public class SharedPrefManager {
     }
 
     //this method will logout the user
-    public void logout() {
+    public void logout(Context context) {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
+        ((Activity)context).finish();//Block back button to MainActivity
         mCtx.startActivity(new Intent(mCtx, LoginActivity.class));
     }
 
+    //TODO::complete this method
     //this method will keep user logged in
-    public void stillLogIn(){
+    public boolean stillLogIn(){
+            if(User.token==null){
+                SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.clear();
+                editor.apply();
+                //TODO:Check back button
+                mCtx.startActivity(new Intent(mCtx, LoginActivity.class));
+                return false;
+            }
+            return true;
 
     }
 }

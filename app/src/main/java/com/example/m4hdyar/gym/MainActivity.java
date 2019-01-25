@@ -2,11 +2,13 @@ package com.example.m4hdyar.gym;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,6 +18,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
@@ -23,6 +27,8 @@ import com.android.volley.Response;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -55,6 +61,29 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //Set Athlete name and Subscription name in nav
+        View headerView = navigationView.getHeaderView(0);
+
+        TextView drawerAthleteName = (TextView) headerView.findViewById(R.id.athleteNameInHeader);
+        TextView drawerSubscriptionName = (TextView) headerView.findViewById(R.id.sunNameINHeader);
+        //This part is for setting image in nav
+//        ImageView drawerImage = (ImageView) headerView.findViewById(R.id.imageView_nav_bar);
+//        Picasso.get().load("http://baamardom.ir/wp-content/uploads/2018/02/%D8%B7%D9%86%D8%A7%D8%B2-%D8%B7%D8%A8%D8%A7%D8%B7%D8%A8%D8%A7%DB%8C%DB%8C-429x400.jpg").into(drawerImage, new Callback() {
+//            @Override
+//            public void onSuccess() {
+//                Log.e("Picasso","Succeed");
+//            }
+//
+//            @Override
+//            public void onError(Exception e) {
+//                Log.e("Picasso","Fail");
+//                e.printStackTrace();
+//
+//            }
+//        });
+        drawerAthleteName.setText(User.athleteName+" "+User.athleteFamily);
+        drawerSubscriptionName.setText(User.SubscriptionName);
 
 
         //Start program from SportProgramFragment
@@ -111,15 +140,12 @@ public class MainActivity extends AppCompatActivity
             fragment = new MealdietProgramFragment();
         } else if (id == R.id.nav_body_state) {
             fragment = new BodyStateFragment();
-        } else if (id == R.id.nav_private_sport_game) {
-            fragment = new PrivatProgramSportFragment();
         } else if (id == R.id.nav_account) {
             fragment = new ProfileFragment();
         } else if (id == R.id.nav_subscription_history) {
             fragment = new SubscriptionHistoryFragment();
         } else if (id == R.id.nav_exit) {
-         //TODO: Clear Server Token
-
+            SharedPrefManager.getInstance(getApplicationContext()).logout(this);
 
         }
         if (fragment != null) {
