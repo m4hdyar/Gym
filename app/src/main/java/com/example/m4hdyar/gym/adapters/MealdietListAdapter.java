@@ -81,7 +81,7 @@ public class MealdietListAdapter extends RecyclerView.Adapter<MealdietListAdapte
         }
     }
 
-    public void updateReceiptsList(List<MealdietProgramDay.MealdietProgramRow> newList) {
+    public void updateMealdietAdapter(List<MealdietProgramDay.MealdietProgramRow> newList) {
         this.mealdietRowsList = new ArrayList<>();
         this.mealdietRowsList.addAll(newList);
         this.notifyDataSetChanged();

@@ -49,6 +49,12 @@ public class MealdietProgramFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    /**
+     *
+     *  Mine added Variables
+     *
+     */
     //Create context
     Context context;
 
@@ -59,12 +65,8 @@ public class MealdietProgramFragment extends Fragment {
     String programSpinnerPrefix;
     String daySpinnerPrefix;
 
-
     //Saving current program and day
     int currentProgram,currentDay;
-
-
-    private OnFragmentInteractionListener mListener;
 
     //Defining Program RecyclerView and Adapter
     RecyclerView programRecyclerView;
@@ -74,6 +76,11 @@ public class MealdietProgramFragment extends Fragment {
 
     ArrayList<MealdietProgram> programsArr;
 
+    // * End of my variables *
+
+
+
+    private OnFragmentInteractionListener mListener;
 
     public MealdietProgramFragment() {
         // Required empty public constructor
@@ -419,7 +426,7 @@ public class MealdietProgramFragment extends Fragment {
         //TODO : SOMETIMES return 0
         Log.e("Adapter", String.valueOf(programRowsList.size()));
         Log.e("Adapter",programRowsList.get(1).getFoodName());
-        programListAdapter.updateReceiptsList(programRowsList);
+        programListAdapter.updateMealdietAdapter(programRowsList);
 //        Toolbar toolbar = (Toolbar) getActivity().too
 //        menu.add(0, 0, 0, "Option1").setShortcut('3', 'c');
         //programRecyclerView.swapAdapter(programListAdapter2, false);

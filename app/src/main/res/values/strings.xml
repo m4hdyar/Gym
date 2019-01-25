@@ -33,4 +33,7 @@
     <string name="diet_spinner_prefix">برنامه شماره </string>
     <string name="day_spinner_prefix">روز شماره </string>
 
+    <string name="sport_program_spinner_prefix">برنامه شماره </string>
+    <string name="sport_day_spinner_prefix">روز شماره </string>
+
 </resources>
