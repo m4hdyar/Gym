@@ -1,4 +1,4 @@
-package com.example.m4hdyar.gym;
+package com.example.m4hdyar.gym.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -15,9 +15,10 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.m4hdyar.gym.R;
+import com.example.m4hdyar.gym.models.User;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 

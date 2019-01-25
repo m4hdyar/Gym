@@ -1,14 +1,8 @@
-package com.example.m4hdyar.gym;
+package com.example.m4hdyar.gym.activities;
 
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,21 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.Response;
-import com.android.volley.Request;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONException;
+import com.example.m4hdyar.gym.R;
+import com.example.m4hdyar.gym.utils.SharedPrefManager;
+import com.example.m4hdyar.gym.models.User;
+import com.example.m4hdyar.gym.fragments.BodyStateFragment;
+import com.example.m4hdyar.gym.fragments.MealdietProgramFragment;
+import com.example.m4hdyar.gym.fragments.ProfileFragment;
+import com.example.m4hdyar.gym.fragments.SportProgramFragment;
+import com.example.m4hdyar.gym.fragments.SubscriptionHistoryFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

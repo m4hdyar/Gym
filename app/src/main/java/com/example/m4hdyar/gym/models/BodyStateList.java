@@ -1,14 +1,14 @@
-package com.example.m4hdyar.gym;
+package com.example.m4hdyar.gym.models;
 
 import java.util.ArrayList;
 
 public class BodyStateList {
-    static ArrayList<DataBodyState> dataBodyStatesList;
+    public static ArrayList<DataBodyState> dataBodyStatesList;
     static{
         dataBodyStatesList = new ArrayList<>();
     }
 
-    static class DataBodyState {
+    public static class DataBodyState {
         private String submitDate;
         private float dataList;
         private int dataListId;

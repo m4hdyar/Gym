@@ -1,9 +1,12 @@
-package com.example.m4hdyar.gym;
+package com.example.m4hdyar.gym.utils;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
+import com.example.m4hdyar.gym.activities.LoginActivity;
+import com.example.m4hdyar.gym.models.User;
 
 
 //here for this class we are using a singleton pattern

@@ -1,4 +1,4 @@
-package com.example.m4hdyar.gym;
+package com.example.m4hdyar.gym.models;
 
 
 

@@ -1,4 +1,4 @@
-package com.example.m4hdyar.gym;//Implementing decoration to have divider line
+package com.example.m4hdyar.gym.utils;//Implementing decoration to have divider line
 
 import android.content.Context;
 import android.graphics.Canvas;

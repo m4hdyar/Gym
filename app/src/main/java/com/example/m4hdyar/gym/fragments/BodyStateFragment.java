@@ -1,4 +1,4 @@
-package com.example.m4hdyar.gym;
+package com.example.m4hdyar.gym.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -19,16 +19,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.m4hdyar.gym.models.BodyStateList;
+import com.example.m4hdyar.gym.R;
+import com.example.m4hdyar.gym.models.User;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.DataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,8 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.example.m4hdyar.gym.BodyStateList.dataBodyStatesList;
-import static com.example.m4hdyar.gym.BodyStateList.dataBodyStatesList;
+import static com.example.m4hdyar.gym.models.BodyStateList.dataBodyStatesList;
 
 
 /**
@@ -228,7 +224,7 @@ public class BodyStateFragment extends Fragment implements AdapterView.OnItemSel
         ArrayList<BarEntry> barEntries = new ArrayList<>();
 
 
-        for(int i=0; i<BodyStateList.dataBodyStatesList.size();i++) {
+        for(int i = 0; i<BodyStateList.dataBodyStatesList.size(); i++) {
             barEntries.add(new BarEntry(BodyStateList.dataBodyStatesList.get(i).getDataListId(), BodyStateList.dataBodyStatesList.get(i).getDataList()));
         }
 

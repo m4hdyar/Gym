@@ -1,11 +1,8 @@
-package com.example.m4hdyar.gym;
+package com.example.m4hdyar.gym.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,21 +15,17 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.m4hdyar.gym.R;
+import com.example.m4hdyar.gym.utils.SharedPrefManager;
+import com.example.m4hdyar.gym.models.User;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.example.m4hdyar.gym.BodyStateList.dataBodyStatesList;
 
 public class LoginActivity extends AppCompatActivity {
 

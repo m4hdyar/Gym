@@ -1,6 +1,6 @@
 package com.example.m4hdyar.gym.lists;
 
-import com.example.m4hdyar.gym.MealdietProgram;
+import com.example.m4hdyar.gym.models.MealdietProgram;
 
 import java.util.ArrayList;
 

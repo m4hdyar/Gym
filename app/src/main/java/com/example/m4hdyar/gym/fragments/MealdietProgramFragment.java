@@ -1,4 +1,4 @@
-package com.example.m4hdyar.gym;
+package com.example.m4hdyar.gym.fragments;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -16,8 +16,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
+import com.example.m4hdyar.gym.adapters.MealdietListAdapter;
+import com.example.m4hdyar.gym.models.MealdietProgram;
+import com.example.m4hdyar.gym.R;
 import com.example.m4hdyar.gym.lists.DietDayRowsList;
 import com.example.m4hdyar.gym.lists.DietDaysList;
 import com.example.m4hdyar.gym.lists.MealdietProgramList;
