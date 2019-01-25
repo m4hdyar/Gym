@@ -8,6 +8,7 @@ public class User {
     public static String token;
 
 
+
     public User(String athleteId, String athleteName, String athleteFamily, String subscriptionName, String token) {
         this.athleteId = athleteId;
         User.athleteName = athleteName;
@@ -15,6 +16,8 @@ public class User {
         SubscriptionName = subscriptionName;
         User.token = token;
     }
+
+
 
     public String getAthleteId() {
         return athleteId;
@@ -35,4 +38,5 @@ public class User {
     public String getToken() {
         return token;
     }
+
 }

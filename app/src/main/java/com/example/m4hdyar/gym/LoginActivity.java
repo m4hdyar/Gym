@@ -66,13 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-
-//        LoginBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                login();
-//            }
-//        });
     }
 
     private void userLogin() {
@@ -156,20 +149,5 @@ public class LoginActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-
-
-//    public void login() {
-////        Fragment fragment = null;
-//        if (UserTxt.getText().toString().equals("a") && PassTxt.getText().toString().equals("a")) {
-//
-//            Toast.makeText(getApplicationContext(),
-//                    "ورود موفقیت آمیز",Toast.LENGTH_SHORT).show();
-////            fragment = new SportProgramFragment();
-//            Intent i = new Intent(this, MainActivity.class);
-//            startActivity(i);
-//        } else {
-//            Toast.makeText(getApplicationContext(), "اطلاعات نا معتبر است",Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
 }
